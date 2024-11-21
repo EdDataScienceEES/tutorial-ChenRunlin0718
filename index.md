@@ -16,6 +16,7 @@ output: html_document
 1. Introduction.
 ### Part I: Data Preparation and Exploration
 2. Data wrangling:
+
 a) Handling missing values with _drop_na()_ and imputation techniques.
 b) Formatting date variables using lubridate.
 c) Filtering and subsetting time periods for analysis.
@@ -47,4 +48,4 @@ b) Seasonal decomposition of environmental data using Loess (STL).
 ## Introduction
 Time series data are sequential data points collected over time. In environmental science, these could be measurements like temperature, rainfall, species population counts, or carbon dioxide levels. Time series analysis allows us to detect trends, seasonality, and anomalies, predict future values, and understand temporal dynamics of environmental processes. In this tutorial, you’ll learn the basics of time series analysis, including data preprocessing, visualization, decomposition, and basic forecasting techniques, all within the context of environmental data.
 
-## _Part I_
+# _Part I_
