@@ -12,6 +12,19 @@ output: html_document
 3. Gain hands-on experience with forecasting techniques to predict trends in environmental data.
 4. Develop skills in using R and relevant packages for analyzing time series data effectively.
 
+## Tutorial steps
+
+1. Introduction
+
+### Part I: Data Preparation and Exploration
+2. 
+a) Handling missing values with _drop_na()_ and imputation techniques.
+b) Formatting date variables using lubridate.
+c) Filtering and subsetting time periods for analysis.
+
+
+
+
 ## Including Plots
 
 You can also embed plots, for example:
