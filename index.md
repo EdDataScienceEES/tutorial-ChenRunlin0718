@@ -17,7 +17,8 @@ output: html_document
 ### Part I: Data Preparation and Exploration
 2. Data wrangling:
 
-a) Handling missing values with _drop_na()_ and imputation techniques.
+a) Load the relevent libraries and dataset
+a) Handling missing values with *drop_na()* and imputation techniques.
 b) Formatting date variables using lubridate.
 c) Filtering and subsetting time periods for analysis.
 3. Exploring the data.
@@ -50,14 +51,36 @@ Time series data are sequential data points collected over time. In environmenta
 
 # _Part I_
 ## Data Wrangling
-In this tutorial, we will use a dataset obtained from the *NASA POWER API*, a tool that provides climate data from NASA's Prediction of Worldwide Energy Resource (POWER) project. Specifically, we will use monthly temperature data (measured at 2 meters above the ground) of Edinburgh (by using Edinburgh's location coordinates: Longitude: 3.1883°W & Latitude: 55.9533°N) for the years 2000 to 2022. 
-We first download the relevant packages and load the dataset from *NASA POWER API* using the following code:
-```r
+In this tutorial, we will use a dataset obtained from the **NASA POWER API**, a tool that provides climate data from NASA's Prediction of Worldwide Energy Resource (POWER) project. Specifically, we will use monthly temperature data (measured at 2 meters above the ground) of Edinburgh (by using Edinburgh's location coordinates: Longitude: 3.1883°W & Latitude: 55.9533°N) for the years 2000 to 2022. 
+We first download the relevant packages from **NASA POWER API** using the following code:
+``` {load packages}
+# relevant packages
 library(ggplot2)
 library(forecast)
 library(dplyr)
-
+install.packages("nasapower")   # download the library
+library(nasapower)   # load the library
 ```
+
+Now let's load the dataset. Note that we want the location to be Edinburgh so we need to enter Edinburgh's coordinate of location.
+
+```r {load dataset}
+temp_data <- get_power(
+  community = "AG",
+  lonlat = c(-3.1883,55.9533),   # Edinburgh's Longitude and Latitude
+  pars = "T2M",      # Temperature at 2 meters
+  temporal_api = "monthly",
+  dates = c("2000", "2022")
+)
+```
+
+
+
+
+
+
+
+
 
 
 {{ $id := substr (sha1 .Inner) 0 8 }}

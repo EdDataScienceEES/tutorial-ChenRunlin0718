@@ -13,7 +13,7 @@
 
 <meta name="date" content="2024-11-21" />
 
-<title>Tutorial: Time Series Analysis for Environmental Data</title>
+<title>Tutorial: Introduction to time Series Analysis for Environmental Data</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,16 +350,16 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Tutorial: Time Series Analysis for
-Environmental Data</h1>
+<h1 class="title toc-ignore">Tutorial: Introduction to time Series
+Analysis for Environmental Data</h1>
 <h4 class="author">Runlin Chen</h4>
 <h4 class="date">2024-11-21</h4>
 
 </div>
 
 
-<div id="tutorial-aims" class="section level2">
-<h2>Tutorial aims</h2>
+<div id="tutorial-aims" class="section level1">
+<h1>Tutorial aims</h1>
 <ol style="list-style-type: decimal">
 <li>Understand the fundamentals of time series analysis and its
 applications in environmental data.</li>
@@ -371,27 +371,116 @@ trends in environmental data.</li>
 series data effectively.</li>
 </ol>
 </div>
-<div id="tutorial-steps" class="section level2">
-<h2>Tutorial steps</h2>
+<div id="tutorial-steps" class="section level1">
+<h1>Tutorial steps</h1>
 <ol style="list-style-type: decimal">
-<li>Introduction ### Part I: Data Preparation and Exploration</li>
-<li><ol style="list-style-type: lower-alpha">
+<li>Introduction. ### Part I: Data Preparation and Exploration</li>
+<li>Data wrangling:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
 <li>Handling missing values with <em>drop_na()</em> and imputation
 techniques.</li>
-</ol></li>
-</ol>
-<ol start="2" style="list-style-type: lower-alpha">
 <li>Formatting date variables using lubridate.</li>
 <li>Filtering and subsetting time periods for analysis.</li>
 </ol>
+<ol start="3" style="list-style-type: decimal">
+<li>Exploring the data.</li>
+</ol>
+<div id="part-ii-analyzing-time-series" class="section level3">
+<h3>Part II: Analyzing Time Series</h3>
+<ol start="4" style="list-style-type: decimal">
+<li>Decomposing Time Series:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Splitting time series into trend, seasonal, and residual components
+with <em>decompose</em>.</li>
+<li>Interpreting decomposed components in environmental contexts.</li>
+</ol>
+<ol start="5" style="list-style-type: decimal">
+<li>Detecting Anomalies:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Identifying outliers and spikes using visualization techniques.</li>
+<li>Using statistical tests to confirm anomalies.</li>
+</ol>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><code>{r pressure, echo=FALSE} plot(pressure)</code></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the
-code chunk to prevent printing of the R code that generated the
-plot.</p>
+<div id="part-iii-forecasting" class="section level3">
+<h3>Part III: Forecasting</h3>
+<ol start="6" style="list-style-type: decimal">
+<li>Building Forecasting Models:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Introduction to ARIMA models and their suitability for environmental
+data.</li>
+<li>Automatically selecting the best model with auto.arima.</li>
+</ol>
+<ol start="7" style="list-style-type: decimal">
+<li>Generating Predictions:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Forecasting future values and confidence intervals.</li>
+<li>Plotting and interpreting forecasts.</li>
+</ol>
+</div>
+<div id="optional-part-iv-advanced-techniques-and-challenge" class="section level3">
+<h3>(Optional) Part IV: Advanced Techniques and Challenge</h3>
+<ol start="8" style="list-style-type: decimal">
+<li>Advanced Topics:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Multivariate time series analysis (e.g., temperature and rainfall
+relationships).</li>
+<li>Seasonal decomposition of environmental data using Loess (STL).</li>
+</ol>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Time series data are sequential data points collected over time. In
+environmental science, these could be measurements like temperature,
+rainfall, species population counts, or carbon dioxide levels. Time
+series analysis allows us to detect trends, seasonality, and anomalies,
+predict future values, and understand temporal dynamics of environmental
+processes. In this tutorial, you’ll learn the basics of time series
+analysis, including data preprocessing, visualization, decomposition,
+and basic forecasting techniques, all within the context of
+environmental data.</p>
+</div>
+</div>
+<div id="part-i" class="section level1">
+<h1><em>Part I</em></h1>
+<div id="data-wrangling" class="section level2">
+<h2>Data Wrangling</h2>
+<p>In this tutorial, we will use a dataset obtained from the
+<strong>NASA POWER API</strong>, a tool that provides climate data from
+NASA’s Prediction of Worldwide Energy Resource (POWER) project.
+Specifically, we will use monthly temperature data (measured at 2 meters
+above the ground) of Edinburgh (by using Edinburgh’s location
+coordinates: Longitude: 3.1883°W &amp; Latitude: 55.9533°N) for the
+years 2000 to 2022. We first download the relevant packages and load the
+dataset from <strong>NASA POWER API</strong> using the following
+code:</p>
+<pre class="r"><code># relevant packages
+library(ggplot2)
+library(forecast)
+library(dplyr)
+
+install.packages(&quot;nasapower&quot;)   # download the library
+library(nasapower)   # load the library</code></pre>
+<p>Now let’s load the dataset from the <em>‘nasapower’</em> library.
+Note that we want the location to be Edinburgh so we need to enter
+Edinburgh’s coordinate of location.
+<code>r {load dataset} temp_data &lt;- get_power(   community = &quot;AG&quot;,   lonlat = c(-3.1883,55.9533),   # Edinburgh&#39;s Longitude and Latitude   pars = &quot;T2M&quot;,      # Temperature at 2 meters   temporal_api = &quot;monthly&quot;,   dates = c(&quot;2000&quot;, &quot;2022&quot;) )</code></p>
+{{ $id := substr (sha1 .Inner) 0 8 }}
+<div class="gdoc-expand">
+<label class="gdoc-expand__head flex justify-between" for="{{ $id }}-{{ .Ordinal }}">
+<span>{{ default “Expand” (.Get 0) }}</span> <span>{{ default “↕” (.Get
+1) }}</span> </label>
+<input id="{{ $id }}-{{ .Ordinal }}" type="checkbox" class="gdoc-expand__control hidden"></input>
+<div class="gdoc-markdown--nested gdoc-expand__content">
+<pre><code>{{ .Inner | $.Page.RenderString }}</code></pre>
+</div>
+</div>
+</div>
 </div>
 
 
