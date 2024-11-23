@@ -56,14 +56,12 @@ Note that this tutorial will assume that you already have previous experience wi
 {% endcapture %}
 {% include callout.html content=callout colour=alert %}
 
-
-
 # _Part I_
 ## Data Wrangling
 ### a) Load the dataset
 In this tutorial, we will use a dataset obtained from the **NASA POWER API**, a tool that provides climate data from NASA's Prediction of Worldwide Energy Resource (POWER) project. Specifically, we will use monthly temperature data (measured at 2 meters above the ground) of Edinburgh (by using Edinburgh's location coordinates: Longitude: 3.1883°W & Latitude: 55.9533°N) for the years 2000 to 2022. 
 We first download the relevant packages using the following code:
-```
+```r
 # relevant packages
 library(ggplot2)
 library(forecast)
@@ -72,9 +70,9 @@ library(nasapower)
 library(lubridate)
 ```
 
-Now let's load the dataset and name it *'temp_data'*. Note that we want the location to be Edinburgh so we need to enter Edinburgh's coordinate of location. 
+Now let's load the dataset and name it `temp_data`. Note that we want the location to be Edinburgh so we need to enter Edinburgh's coordinate of location. 
 
-```
+```r
 temp_data <- get_power(
   community = "AG",
   lonlat = c(-3.1883,55.9533),   # Edinburgh's Longitude and Latitude
@@ -85,7 +83,26 @@ temp_data <- get_power(
 ```
 
 ### b) Clean and organize the dataset
+Now we have the dataset, but let's check if it is like what we wanted by running `head(temp_data)`. We can see that the dataset is in a wide format, with months as separate columns. This structure is not ideal for time series analysis, where data should be in long format with a single date column. Also, we do not need columns such as `LON`, `LAT`, and `PARAMETER` are repeated and not provide valuable information. Moreover, the column names for months (JAN, FEB, etc.) use abbreviations, which need to be converted into numbers or used to generate a proper date. These can be done using the following code: 
 
+```r
+# Step 1: Reshape from wide to long format
+# Clean the dataset
+cleaned_temp_data <- temp_data %>%
+  # Reshape from wide to long format
+  pivot_longer(
+    cols = JAN:DEC, # Ensure column names match exactly
+    names_to = "MONTH",
+    values_to = "TEMPERATURE"
+  ) %>%
+  # Convert MONTH abbreviations to numbers
+  mutate(
+    MONTH = match(toupper(MONTH), toupper(month.abb)),
+    YEAR_MONTH = paste(YEAR, MONTH, sep = "-") # Create 'YEAR-MONTH' column
+  ) %>%
+  # Select only the relevant columns for time series analysis
+  select(YEAR_MONTH, TEMPERATURE)
+```
 
 
 
