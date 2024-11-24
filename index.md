@@ -17,16 +17,15 @@ output: html_document
 ### Part I: Data Preparation and Exploration
 2. Data wrangling:
 
-a) Load the relevant libraries and dataset.
-a) Handling missing values with *drop_na()* and imputation techniques.
-b) Formatting date variables using lubridate.
-c) Filtering and subsetting time periods for analysis.
-3. Exploring the data.
+##### a) Load the relevant libraries and the dataset.
+
+##### b) Clean and organize the dataset
 
 ### Part II: Analyzing Time Series
+
 4. Decomposing Time Series:
-a) Splitting time series into trend, seasonal, and residual components with _decompose_.
-b) Interpreting decomposed components in environmental contexts.
+##### a) Splitting time series into trend, seasonal, and residual components with _decompose_.
+##### b) Interpreting decomposed components in environmental contexts.
 
 5. Detecting Anomalies:
 a) Identifying outliers and spikes using visualization techniques.
@@ -56,13 +55,14 @@ Note that this tutorial will assume that you already have previous experience wi
 {% endcapture %}
 {% include callout.html content=callout colour=alert %}
 
-# _Part I_
+# _Part I: Data Preparation and Exploration_
 ## Data Wrangling
 ### a) Load the dataset
 In this tutorial, we will use a dataset obtained from the **NASA POWER API**, a tool that provides climate data from NASA's Prediction of Worldwide Energy Resource (POWER) project. Specifically, we will use monthly temperature data (measured at 2 meters above the ground) of Edinburgh (by using Edinburgh's location coordinates: Longitude: 3.1883°W & Latitude: 55.9533°N) for the years 2000 to 2022. 
 We first download the relevant packages using the following code:
 ```r
-# relevant packages
+# Relevant packages
+# Need to download them if you haven't already
 library(ggplot2)
 library(forecast)
 library(dplyr)
@@ -83,12 +83,21 @@ temp_data <- get_power(
 ```
 
 ### b) Clean and organize the dataset
-Now we have the dataset, but let's check if it is like what we wanted by running `head(temp_data)`. We can see that the dataset is in a wide format, with months as separate columns. This structure is not ideal for time series analysis, where data should be in long format with a single date column. Also, we do not need columns such as `LON`, `LAT`, and `PARAMETER` are repeated and not provide valuable information. Moreover, the column names for months (JAN, FEB, etc.) use abbreviations, which need to be converted into numbers or used to generate a proper date. These can be done using the following code: 
+Now we have the dataset, but is it in a ideal form for doing time series analysis? An ideal dataset for time series analysis has specific characteristics that make it well-suited for extracting meaningful patterns and developing accurate models:
+
+**- Consistent Time Intervals:** Regular intervals ensure that the dataset captures temporal patterns like trends, seasonality, or cyclic behavior accurately. Irregular intervals make it difficult to apply standard time series models. 
+**- No Missing Values:** Missing values can lead to incorrect analysis, such as distorted trends or seasonal patterns. If unavoidable, missing values should be deleted or handled appropriately.
+**- Sufficient Length of Historical Data:** Time series models rely on past data to predict future values. A longer dataset allows for better detection of trends, seasonality, and rare events (e.g., economic recessions or climate changes).
+**- Clear labels for time periods:** Properly labeled time points make it easier to interpret results and ensure that models process the data correctly. 
+
+These are some basic characteristics of a dataset that is ideal for doing timer series analysis. Without these characteristics, the quality and reliability of the analysis may suffer. More constraints may apply to the dataset depends on the aims of analysis.
+
+Now let's check what our dataset looks like by running `head(temp_data)`. We can see that the dataset is in a wide format, with months as separate columns. This structure is not ideal for time series analysis, where data should be in long format with a single date column. Also, we do not need columns such as `LON`, `LAT`, and `PARAMETER` are repeated and not provide valuable information. Moreover, the column names for months (JAN, FEB, etc.) use abbreviations, which need to be converted into numbers or used to generate a proper date. These can be done using the following code: 
 
 ```r
 # Step 1: Reshape from wide to long format
 # Clean the dataset
-cleaned_temp_data <- temp_data %>%
+temp_data <- temp_data %>%
   # Reshape from wide to long format
   pivot_longer(
     cols = JAN:DEC, # Ensure column names match exactly
@@ -102,7 +111,16 @@ cleaned_temp_data <- temp_data %>%
   ) %>%
   # Select only the relevant columns for time series analysis
   select(YEAR_MONTH, TEMPERATURE)
+  
 ```
+Run the `head(temp_data)` again and see what it looks like now. Now it is in long format and has only two columns: `YEAR_MONTH` and `TEMPERATURE`.  This is a fairly simple dataset but ideal for time series analysis! Note that we haven't check if there is missing values in the dataset, we can do this by running the following code which count the number of missing values in the entire dataset:
+
+```r
+sum(is.na(temp_data))
+```
+It's 0! This means there is no missing value in our dataset. We are good to go!
+
+# _Part II: Analyzing Time Series_
 
 
 

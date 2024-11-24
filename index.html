@@ -377,27 +377,20 @@ series data effectively.</li>
 <li>Introduction. ### Part I: Data Preparation and Exploration</li>
 <li>Data wrangling:</li>
 </ol>
-<ol style="list-style-type: lower-alpha">
-<li>Handling missing values with <em>drop_na()</em> and imputation
-techniques.</li>
-<li>Formatting date variables using lubridate.</li>
-<li>Filtering and subsetting time periods for analysis.</li>
-</ol>
-<ol start="3" style="list-style-type: decimal">
-<li>Exploring the data.</li>
-</ol>
+<div id="a-load-the-relevant-libraries-and-the-dataset." class="section level5">
+<h5>a) Load the relevant libraries and the dataset.</h5>
+</div>
+<div id="b-clean-and-organize-the-dataset" class="section level5">
+<h5>b) Clean and organize the dataset</h5>
+</div>
 <div id="part-ii-analyzing-time-series" class="section level3">
 <h3>Part II: Analyzing Time Series</h3>
 <ol start="4" style="list-style-type: decimal">
-<li>Decomposing Time Series:</li>
-</ol>
-<ol style="list-style-type: lower-alpha">
-<li>Splitting time series into trend, seasonal, and residual components
-with <em>decompose</em>.</li>
-<li>Interpreting decomposed components in environmental contexts.</li>
-</ol>
-<ol start="5" style="list-style-type: decimal">
-<li>Detecting Anomalies:</li>
+<li><p>Decomposing Time Series: ##### a) Splitting time series into
+trend, seasonal, and residual components with <em>decompose</em>. #####
+b) Interpreting decomposed components in environmental
+contexts.</p></li>
+<li><p>Detecting Anomalies:</p></li>
 </ol>
 <ol style="list-style-type: lower-alpha">
 <li>Identifying outliers and spikes using visualization techniques.</li>
@@ -442,34 +435,119 @@ series analysis allows us to detect trends, seasonality, and anomalies,
 predict future values, and understand temporal dynamics of environmental
 processes. In this tutorial, you’ll learn the basics of time series
 analysis, including data preprocessing, visualization, decomposition,
-and basic forecasting techniques, all within the context of
-environmental data.</p>
+and basic forecasting techniques.</p>
+<p>In part 1, we will be working with a dataset from <em>NASA</em> that
+captures the temperature of earth and try to do some data wrangling with
+it to make it easier for later analysis. In part 2, we will look into
+some basic and fundamental techniques that can be used to deal with time
+series data. In part 3, things are going to get interesting because we
+are going to build a forecasting Models that is able to predict the
+temperature in the future.</p>
+<p>{% capture callout %} Note that this tutorial will assume that you
+already have previous experience with R and familiar with basic
+operations of R such as <em>%&gt;%</em> and <em>summarise()</em>. If
+not, Coding Club has got you covered: check out the <a href="https://ourcodingclub.github.io/tutorials/intro-to-r/">Intro to R
+tutorial</a>! {% endcapture %} {% include callout.html content=callout
+colour=alert %}</p>
 </div>
 </div>
-<div id="part-i" class="section level1">
-<h1><em>Part I</em></h1>
+<div id="part-i-data-preparation-and-exploration" class="section level1">
+<h1><em>Part I: Data Preparation and Exploration</em></h1>
 <div id="data-wrangling" class="section level2">
 <h2>Data Wrangling</h2>
+<div id="a-load-the-dataset" class="section level3">
+<h3>a) Load the dataset</h3>
 <p>In this tutorial, we will use a dataset obtained from the
 <strong>NASA POWER API</strong>, a tool that provides climate data from
 NASA’s Prediction of Worldwide Energy Resource (POWER) project.
 Specifically, we will use monthly temperature data (measured at 2 meters
 above the ground) of Edinburgh (by using Edinburgh’s location
 coordinates: Longitude: 3.1883°W &amp; Latitude: 55.9533°N) for the
-years 2000 to 2022. We first download the relevant packages and load the
-dataset from <strong>NASA POWER API</strong> using the following
-code:</p>
-<pre class="r"><code># relevant packages
+years 2000 to 2022. We first download the relevant packages using the
+following code:</p>
+<pre class="r"><code># Relevant packages
+# Need to download them if you haven&#39;t already
 library(ggplot2)
 library(forecast)
 library(dplyr)
-
-install.packages(&quot;nasapower&quot;)   # download the library
-library(nasapower)   # load the library</code></pre>
-<p>Now let’s load the dataset from the <em>‘nasapower’</em> library.
-Note that we want the location to be Edinburgh so we need to enter
-Edinburgh’s coordinate of location.
-<code>r {load dataset} temp_data &lt;- get_power(   community = &quot;AG&quot;,   lonlat = c(-3.1883,55.9533),   # Edinburgh&#39;s Longitude and Latitude   pars = &quot;T2M&quot;,      # Temperature at 2 meters   temporal_api = &quot;monthly&quot;,   dates = c(&quot;2000&quot;, &quot;2022&quot;) )</code></p>
+library(nasapower)
+library(lubridate)</code></pre>
+<p>Now let’s load the dataset and name it <code>temp_data</code>. Note
+that we want the location to be Edinburgh so we need to enter
+Edinburgh’s coordinate of location.</p>
+<pre class="r"><code>temp_data &lt;- get_power(
+  community = &quot;AG&quot;,
+  lonlat = c(-3.1883,55.9533),   # Edinburgh&#39;s Longitude and Latitude
+  pars = &quot;T2M&quot;,      # Temperature at 2 meters
+  temporal_api = &quot;monthly&quot;,
+  dates = c(&quot;2000&quot;, &quot;2022&quot;)
+)</code></pre>
+</div>
+<div id="b-clean-and-organize-the-dataset-1" class="section level3">
+<h3>b) Clean and organize the dataset</h3>
+<p>Now we have the dataset, but is it in a ideal form for doing time
+series analysis? An ideal dataset for time series analysis has specific
+characteristics that make it well-suited for extracting meaningful
+patterns and developing accurate models:</p>
+<p><strong>- Consistent Time Intervals:</strong> Regular intervals
+ensure that the dataset captures temporal patterns like trends,
+seasonality, or cyclic behavior accurately. Irregular intervals make it
+difficult to apply standard time series models. <strong>- No Missing
+Values:</strong> Missing values can lead to incorrect analysis, such as
+distorted trends or seasonal patterns. If unavoidable, missing values
+should be deleted or handled appropriately. <strong>- Sufficient Length
+of Historical Data:</strong> Time series models rely on past data to
+predict future values. A longer dataset allows for better detection of
+trends, seasonality, and rare events (e.g., economic recessions or
+climate changes). <strong>- Clear labels for time periods:</strong>
+Properly labeled time points make it easier to interpret results and
+ensure that models process the data correctly.</p>
+<p>These are some basic characteristics of a dataset that is ideal for
+doing timer series analysis. Without these characteristics, the quality
+and reliability of the analysis may suffer. More constraints may apply
+to the dataset depends on the aims of analysis.</p>
+<p>Now let’s check what our dataset looks like by running
+<code>head(temp_data)</code>. We can see that the dataset is in a wide
+format, with months as separate columns. This structure is not ideal for
+time series analysis, where data should be in long format with a single
+date column. Also, we do not need columns such as <code>LON</code>,
+<code>LAT</code>, and <code>PARAMETER</code> are repeated and not
+provide valuable information. Moreover, the column names for months
+(JAN, FEB, etc.) use abbreviations, which need to be converted into
+numbers or used to generate a proper date. These can be done using the
+following code:</p>
+<pre class="r"><code># Step 1: Reshape from wide to long format
+# Clean the dataset
+temp_data &lt;- temp_data %&gt;%
+  # Reshape from wide to long format
+  pivot_longer(
+    cols = JAN:DEC, # Ensure column names match exactly
+    names_to = &quot;MONTH&quot;,
+    values_to = &quot;TEMPERATURE&quot;
+  ) %&gt;%
+  # Convert MONTH abbreviations to numbers
+  mutate(
+    MONTH = match(toupper(MONTH), toupper(month.abb)),
+    YEAR_MONTH = paste(YEAR, MONTH, sep = &quot;-&quot;) # Create &#39;YEAR-MONTH&#39; column
+  ) %&gt;%
+  # Select only the relevant columns for time series analysis
+  select(YEAR_MONTH, TEMPERATURE)
+  </code></pre>
+<p>Run the <code>head(temp_data)</code> again and see what it looks like
+now. Now it is in long format and has only two columns:
+<code>YEAR_MONTH</code> and <code>TEMPERATURE</code>. This is a fairly
+simple dataset but ideal for time series analysis! Note that we haven’t
+check if there is missing values in the dataset, we can do this by
+running the following code which count the number of missing values in
+the entire dataset:</p>
+<pre class="r"><code>sum(is.na(temp_data))</code></pre>
+<p>It’s 0! This means there is no missing value in our dataset. We are
+good to go!</p>
+</div>
+</div>
+</div>
+<div id="part-ii-analyzing-time-series-1" class="section level1">
+<h1><em>Part II: Analyzing Time Series</em></h1>
 {{ $id := substr (sha1 .Inner) 0 8 }}
 <div class="gdoc-expand">
 <label class="gdoc-expand__head flex justify-between" for="{{ $id }}-{{ .Ordinal }}">
@@ -478,7 +556,6 @@ Edinburgh’s coordinate of location.
 <input id="{{ $id }}-{{ .Ordinal }}" type="checkbox" class="gdoc-expand__control hidden"></input>
 <div class="gdoc-markdown--nested gdoc-expand__content">
 <pre><code>{{ .Inner | $.Page.RenderString }}</code></pre>
-</div>
 </div>
 </div>
 </div>
