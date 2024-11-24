@@ -140,7 +140,14 @@ ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
   )
 ```
 This is what the plot looks like:
-
+<table align="center">
+  <tr>
+    <td>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/Temperature_Trends_Over_Time.png" alt="Temperature trend" width="300"/>
+      <p><em>Figure 1: Temperature trend over time</em></p>
+    </td>
+  </tr>
+</table>
 
 
 
