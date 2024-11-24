@@ -182,6 +182,8 @@ There dataset is decomposed into the following four panels:
 In general, the trend component offers insights into long-term climatic changes, useful for climate modeling and environmental studies. Further more, the decomposition shows strong seasonality, which can be leveraged for accurate seasonal forecasting later.
 
 
+
+
 {{ $id := substr (sha1 .Inner) 0 8 }}
 <div class="gdoc-expand">
   <label class="gdoc-expand__head flex justify-between" for="{{ $id }}-{{ .Ordinal }}">
