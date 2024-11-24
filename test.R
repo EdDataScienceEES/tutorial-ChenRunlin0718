@@ -49,8 +49,9 @@ ggsave('plots/Temperature_Trends_Over_Time.png', plot = Temperature_Trends_Over_
 ts_data <- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
 
 # Apply STL decomposition (Seasonal and Trend decomposition using Loess)
+png("plots/STL_Decomposition.png", width = 30, height = 20, units = "cm", bg = "white", res = 300)
 decomposed_stl <- stl(ts_data, s.window = "periodic")
 STL_Decomposition <- plot(decomposed_stl, main = "STL Decomposition of Monthly Temperature Data")
-ggsave('plots/STL_Decomposition.png', plot = STL_Decomposition, width = 30, height = 20, units = "cm", bg = "white")
+dev.off()
 
 

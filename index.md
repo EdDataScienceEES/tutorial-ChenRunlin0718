@@ -13,17 +13,15 @@ output: html_document
 4. Develop skills in using R and relevant packages for analyzing time series data effectively.
 
 # Tutorial steps
-1. Introduction.
+####1. Introduction.
+
 ### Part I: Data Preparation and Exploration
-2. Data wrangling:
-
+#### 2. Data wrangling:
 a) Load the relevant libraries and the dataset.
-
 b) Clean and organize the dataset
-
 ### Part II: Analyzing Time Series
 
-4. Decomposing Time Series:
+#### 4. Decomposing Time Series:
 a) Splitting time series into trend, seasonal, and residual components with _decompose_.
 b) Interpreting decomposed components in environmental contexts.
 
