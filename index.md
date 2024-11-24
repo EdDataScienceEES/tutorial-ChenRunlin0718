@@ -129,6 +129,7 @@ sum(is.na(temp_data))
 It's 0! This means there is no missing value in our dataset. We are good to go!
 
 # _Part II: Analyzing Time Series_
+### Visualization of data
 We can start by displaying the temperature trends over time and see what the plot looks like. We can simply use the `ggplot()` to do this for us:
 ```r
 ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
@@ -143,15 +144,43 @@ This is what the plot looks like:
 <table align="center">
   <tr>
     <td>
-      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/Temperature_Trends_Over_Time.png" alt="Temperature trend" width="300"/>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/Temperature_Trends_Over_Time.png" alt="Temperature trend" width="700"/>
       <p><em>Figure 1: Temperature trend over time</em></p>
     </td>
   </tr>
 </table>
 
+We can clearly see that the temperature exhibits a clear seasonal pattern, with regular fluctuations that likely correspond to yearly changes (e.g., summer and winter cycles). The recurring peaks represent warmer months, while the troughs correspond to cooler months, highlighting predictable seasonal variability. Also, there does not appear to be a significant long-term upward or downward trend, suggesting relative stability in Edinburgh's average temperature from 2000 to the end of 2020. 
 
+### Decomposing Time Series:
+The previous plot provides an overview of the temperature trends over time, showing clear seasonal fluctuations and variations. However, to better understand the underlying components—such as the overall trend, recurring seasonal patterns and random fluctuations, we can decompose the time series. Decomposition helps us isolate these components, enabling a more detailed analysis of the data. Using the `forecast` library, we can use the `objects` and `stl()` function, we can decompose our dataset:
+```r
+ts_data <- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
 
+# Apply STL decomposition (Seasonal and Trend decomposition)
+decomposed_stl <- stl(ts_data, s.window = "periodic")
+plot(decomposed_stl, main = "STL Decomposition of the Data")
+```
+The `ts` function converts our temperature data into a time series object and the `stl` function performs seasonal and trend decomposition (note that here we use `s.window = "periodic"` to assume a fixed seasonal pattern in the dataset). Run this chunk of code and we will get the plot below:
+<table align="center">
+  <tr>
+    <td>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/STL_Decomposition.png" alt="STL Decomposition plot" width="700"/>
+      <p><em>Figure 2: STL Decomposition plot</em></p>
+    </td>
+  </tr>
+</table>
 
+There dataset is decomposed into the following four panels:
+**- Data (Observed Time Series):** The top panel represents the original temperature data, which shows both seasonal patterns and an underlying trend. This is just what we have in Figure 1. 
+
+**- Seasonal Component:** The second panel highlights the seasonal component, which is consistent across the years. The periodic fluctuations indicate clear seasonality in the dataset, with similar highs and lows repeating each year. This is typical for most temperature datasets, where warmer and cooler months recur annually.
+
+**- Trend Component:** The third panel shows the trend component, which represents the long-term changes in temperature. There are periods of increase and decrease in temperature over the years, reflecting underlying climatic changes. Notably, around 2010-2015, there is a slight downward trend, but the trend appears to recover in recent years.
+
+**- Remainder (Random Component):** The fourth panel shows the remainder (random) component, which captures noise or unexplained variations in the data. There are spikes and dips, suggesting anomalies or unusual events that deviate from the expected trend and seasonality of the dataset. These could be due to irregular climatic events such as heatwaves, cold snaps, or measurement errors.
+
+In general, the trend component offers insights into long-term climatic changes, useful for climate modeling and environmental studies. Further more, the decomposition shows strong seasonality, which can be leveraged for accurate seasonal forecasting later.
 
 
 {{ $id := substr (sha1 .Inner) 0 8 }}

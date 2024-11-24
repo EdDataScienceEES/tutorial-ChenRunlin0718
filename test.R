@@ -35,22 +35,22 @@ temp_data <- temp_data %>%
 
 
 # Part II
-# Updated ggplot2 code
-ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
+(Temperature_Trends_Over_Time <- ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
   geom_line() +
   labs(
     title = "Temperature Trends Over Time",
     x = "Year-Month",
     y = "Temperature"
-  )
+  ))
 
-
-plot(temp_data$TEMPERATURE, main = "Temperature Over Time", xlab = "Year", ylab = "Temperature")
+# Save the plot
+ggsave('plots/Temperature_Trends_Over_Time.png', plot = Temperature_Trends_Over_Time, width = 30, height = 20, units = "cm", bg = "white")
 
 ts_data <- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
-plot(ts_data, main = "Temperature Over Time", xlab = "Year", ylab = "Temperature")
 
-library(stats)
-decomposed <- decompose(ts(temp_data$TEMPERATURE, frequency = 12), type = "multiplicative")
-plot(decomposed)
+# Apply STL decomposition (Seasonal and Trend decomposition using Loess)
+decomposed_stl <- stl(ts_data, s.window = "periodic")
+STL_Decomposition <- plot(decomposed_stl, main = "STL Decomposition of Monthly Temperature Data")
+ggsave('plots/STL_Decomposition.png', plot = STL_Decomposition, width = 30, height = 20, units = "cm", bg = "white")
+
 
