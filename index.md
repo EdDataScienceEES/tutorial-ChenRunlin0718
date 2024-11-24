@@ -17,15 +17,15 @@ output: html_document
 ### Part I: Data Preparation and Exploration
 2. Data wrangling:
 
-##### a) Load the relevant libraries and the dataset.
+a) Load the relevant libraries and the dataset.
 
-##### b) Clean and organize the dataset
+b) Clean and organize the dataset
 
 ### Part II: Analyzing Time Series
 
 4. Decomposing Time Series:
-##### a) Splitting time series into trend, seasonal, and residual components with _decompose_.
-##### b) Interpreting decomposed components in environmental contexts.
+a) Splitting time series into trend, seasonal, and residual components with _decompose_.
+b) Interpreting decomposed components in environmental contexts.
 
 5. Detecting Anomalies:
 a) Identifying outliers and spikes using visualization techniques.
@@ -51,7 +51,9 @@ Time series data are sequential data points collected over time. In environmenta
 In part 1, we will be working with a dataset from *NASA* that captures the temperature of earth and try to do some data wrangling with it to make it easier for later analysis. In part 2, we will look into some basic and fundamental techniques that can be used to deal with time series data. In part 3, things are going to get interesting because we are going to build a forecasting Models that is able to predict the temperature in the future. 
 
 {% capture callout %}
+
 Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
+
 {% endcapture %}
 {% include callout.html content=callout colour=alert %}
 
@@ -86,8 +88,11 @@ temp_data <- get_power(
 Now we have the dataset, but is it in a ideal form for doing time series analysis? An ideal dataset for time series analysis has specific characteristics that make it well-suited for extracting meaningful patterns and developing accurate models:
 
 **- Consistent Time Intervals:** Regular intervals ensure that the dataset captures temporal patterns like trends, seasonality, or cyclic behavior accurately. Irregular intervals make it difficult to apply standard time series models. 
+
 **- No Missing Values:** Missing values can lead to incorrect analysis, such as distorted trends or seasonal patterns. If unavoidable, missing values should be deleted or handled appropriately.
+
 **- Sufficient Length of Historical Data:** Time series models rely on past data to predict future values. A longer dataset allows for better detection of trends, seasonality, and rare events (e.g., economic recessions or climate changes).
+
 **- Clear labels for time periods:** Properly labeled time points make it easier to interpret results and ensure that models process the data correctly. 
 
 These are some basic characteristics of a dataset that is ideal for doing timer series analysis. Without these characteristics, the quality and reliability of the analysis may suffer. More constraints may apply to the dataset depends on the aims of analysis.
@@ -109,6 +114,7 @@ temp_data <- temp_data %>%
     MONTH = match(toupper(MONTH), toupper(month.abb)),
     YEAR_MONTH = paste(YEAR, MONTH, sep = "-") # Create 'YEAR-MONTH' column
   ) %>%
+  mutate(YEAR_MONTH = ym(YEAR_MONTH)) %>% # Convert "YEAR-MONTH" to date
   # Select only the relevant columns for time series analysis
   select(YEAR_MONTH, TEMPERATURE)
   
@@ -118,11 +124,22 @@ Run the `head(temp_data)` again and see what it looks like now. Now it is in lon
 ```r
 sum(is.na(temp_data))
 ```
+
+
 It's 0! This means there is no missing value in our dataset. We are good to go!
 
 # _Part II: Analyzing Time Series_
-
-
+We can start by displaying the temperature trends over time and see what the plot looks like. We can simply use the `ggplot()` to do this for us:
+```r
+ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
+  geom_line() +
+  labs(
+    title = "Temperature Trends Over Time",
+    x = "Year-Month",
+    y = "Temperature"
+  )
+```
+This is what the plot looks like:
 
 
 
