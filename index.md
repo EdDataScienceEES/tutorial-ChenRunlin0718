@@ -13,14 +13,15 @@ output: html_document
 4. Develop skills in using R and relevant packages for analyzing time series data effectively.
 
 # Tutorial steps
-####1. Introduction.
+#### 1. Introduction.
 
 ### Part I: Data Preparation and Exploration
 #### 2. Data wrangling:
 a) Load the relevant libraries and the dataset.
 b) Clean and organize the dataset
-### Part II: Analyzing Time Series
 
+
+### Part II: Analyzing Time Series
 #### 4. Decomposing Time Series:
 a) Splitting time series into trend, seasonal, and residual components with _decompose_.
 b) Interpreting decomposed components in environmental contexts.
@@ -43,7 +44,7 @@ b) Plotting and interpreting forecasts.
 a) Multivariate time series analysis (e.g., temperature and rainfall relationships).
 b) Seasonal decomposition of environmental data using Loess (STL).
 
-## Introduction
+## 1. Introduction
 Time series data are sequential data points collected over time. In environmental science, these could be measurements like temperature, rainfall, species population counts, or carbon dioxide levels. Time series analysis allows us to detect trends, seasonality, and anomalies, predict future values, and understand temporal dynamics of environmental processes. In this tutorial, you’ll learn the basics of time series analysis, including data preprocessing, visualization, decomposition, and basic forecasting techniques.
 
 In part 1, we will be working with a dataset from *NASA* that captures the temperature of earth and try to do some data wrangling with it to make it easier for later analysis. In part 2, we will look into some basic and fundamental techniques that can be used to deal with time series data. In part 3, things are going to get interesting because we are going to build a forecasting Models that is able to predict the temperature in the future. 
@@ -56,7 +57,7 @@ Note that this tutorial will assume that you already have previous experience wi
 {% include callout.html content=callout colour=alert %}
 
 # _Part I: Data Preparation and Exploration_
-## Data Wrangling
+## 2. Data Wrangling
 ### a) Load the dataset
 In this tutorial, we will use a dataset obtained from the **NASA POWER API**, a tool that provides climate data from NASA's Prediction of Worldwide Energy Resource (POWER) project. Specifically, we will use monthly temperature data (measured at 2 meters above the ground) of Edinburgh (by using Edinburgh's location coordinates: Longitude: 3.1883°W & Latitude: 55.9533°N) for the years 2000 to 2022. 
 We first download the relevant packages using the following code:
@@ -127,7 +128,7 @@ sum(is.na(temp_data))
 It's 0! This means there is no missing value in our dataset. We are good to go!
 
 # _Part II: Analyzing Time Series_
-### Visualization of data
+### 3. Visualization of data
 We can start by displaying the temperature trends over time and see what the plot looks like. We can simply use the `ggplot()` to do this for us:
 ```r
 ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
@@ -150,7 +151,7 @@ This is what the plot looks like:
 
 We can clearly see that the temperature exhibits a clear seasonal pattern, with regular fluctuations that likely correspond to yearly changes (e.g., summer and winter cycles). The recurring peaks represent warmer months, while the troughs correspond to cooler months, highlighting predictable seasonal variability. Also, there does not appear to be a significant long-term upward or downward trend, suggesting relative stability in Edinburgh's average temperature from 2000 to the end of 2020. 
 
-### Decomposing Time Series:
+### 4. Decomposing Time Series:
 The previous plot provides an overview of the temperature trends over time, showing clear seasonal fluctuations and variations. However, to better understand the underlying components—such as the overall trend, recurring seasonal patterns and random fluctuations, we can decompose the time series. Decomposition helps us isolate these components, enabling a more detailed analysis of the data. Using the `forecast` library, we can use the `objects` and `stl()` function, we can decompose our dataset:
 ```r
 ts_data <- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
@@ -180,6 +181,25 @@ There dataset is decomposed into the following four panels:
 **- Remainder (Random Component):** The fourth panel shows the remainder (random) component, which captures noise or unexplained variations in the data. There are spikes and dips, suggesting anomalies or unusual events that deviate from the expected trend and seasonality of the dataset. These could be due to irregular climatic events such as heatwaves, cold snaps, or measurement errors.
 
 In general, the trend component offers insights into long-term climatic changes, useful for climate modeling and environmental studies. Further more, the decomposition shows strong seasonality, which can be leveraged for accurate seasonal forecasting later.
+
+
+### 5. Stationarity Check
+Before we move to part III: Data forecasting, it is important to perform stationary check to our dataset. Stationarity is a fundamental assumption for many time series forecasting methods. A stationary series will show constant mean and variance over time, with no visible trend or seasonality. A way to check this is to use the rolling mean and standard deviation from the `zoo` library. 
+```r
+# Compute rolling mean and standard deviation
+roll_mean <- zoo::rollmean(temp_data$TEMPERATURE, k = 12, fill = NA)
+roll_sd <- zoo::rollapply(temp_data$TEMPERATURE, width = 12, FUN = sd, fill = NA)
+```
+
+Then we can visualize it to see if they change over time by running the following code:
+```r
+plot(temp_data$TEMPERATURE, type = "l", col = "blue", ylab = "Temperature", xlab = "Time")
+lines(roll_mean, col = "red", lty = 2)  # Rolling mean
+lines(roll_sd, col = "green", lty = 2)  # Rolling standard deviation
+legend("topright", legend = c("Original", "Rolling Mean", "Rolling SD"), col = c("blue", "red", "green"), lty = c(1, 2, 2))
+```
+
+
 
 
 
