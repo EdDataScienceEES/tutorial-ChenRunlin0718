@@ -164,7 +164,7 @@ The `ts` function converts our temperature data into a time series object and th
 <table align="center">
   <tr>
     <td>
-      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/STL_Decomposition.png" alt="STL Decomposition plot" width="500"/>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/STL_Decomposition.png" alt="STL Decomposition plot" width="700"/>
       <p><em>Figure 2: STL Decomposition plot</em></p>
     </td>
   </tr>
