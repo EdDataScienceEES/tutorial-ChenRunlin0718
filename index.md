@@ -160,6 +160,7 @@ decomposed_stl <- stl(ts_data, s.window = "periodic")
 plot(decomposed_stl, main = "STL Decomposition of the Data")
 ```
 The `ts` function converts our temperature data into a time series object and the `stl` function performs seasonal and trend decomposition (note that here we use `s.window = "periodic"` to assume a fixed seasonal pattern in the dataset). Run this chunk of code and we will get the plot below:
+
 <table align="center">
   <tr>
     <td>
