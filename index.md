@@ -161,7 +161,14 @@ plot(decomposed_stl, main = "STL Decomposition of the Data")
 ```
 The `ts` function converts our temperature data into a time series object and the `stl` function performs seasonal and trend decomposition (note that here we use `s.window = "periodic"` to assume a fixed seasonal pattern in the dataset). Run this chunk of code and we will get the plot below:
 
-<img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/STL_Decomposition.png" alt="STL Decomposition Plot" width="700">
+<table align="center">
+  <tr>
+    <td>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/STL_Decomposition.png" alt="STL Decomposition Plot" width="700"/>
+      <p><em>Figure 2: STL Decomposition Plot</em></p>
+    </td>
+  </tr>
+</table>
 
 There dataset is decomposed into the following four panels:
 **- Data (Observed Time Series):** The top panel represents the original temperature data, which shows both seasonal patterns and an underlying trend. This is just what we have in Figure 1. 
