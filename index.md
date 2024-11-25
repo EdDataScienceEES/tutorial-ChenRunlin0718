@@ -229,18 +229,8 @@ The Answer is that: The `zoo::rollmean` function in R calculates the moving aver
 
 ```{r, echo=FALSE, results='asis'}
 cat('
-<div>
-    <p>Now, take the challenge to create a <code>final_animal</code> table by combining <code>animal_new</code> with your table <code>animal_joined</code>!</p>
-    <button onclick="toggleSolution()" class="toggle-button">Click here for the solution!</button>
-    <div id="solution" style="display: none; margin-top: 10px; background-color: #fff3cd; padding: 10px; border: 1px solid #ffeeba; border-radius: 5px;">
-        <h4>Solution:</h4>
-        <pre><code class="r">
-animal_final <- animal_joined %>%
-    full_join(animal_new, 
-              by = c("id" = "ID", "animal" = "Animals", "weight", "meal" = "Meal"))
-        </code></pre>
-        <p>Notice that <code>bind_rows()</code> was not appropriate here because the column order was different between the two tables...</p>
-    </div>
+<div class="callout {{ include.colour }}">
+    <p>Your content goes here.</p>
 </div>
 ')
 ```
@@ -248,16 +238,5 @@ animal_final <- animal_joined %>%
 
 
 
-{{ $id := substr (sha1 .Inner) 0 8 }}
-<div class="gdoc-expand">
-  <label class="gdoc-expand__head flex justify-between" for="{{ $id }}-{{ .Ordinal }}">
-    <span>{{ default "Expand" (.Get 0) }}</span>
-    <span>{{ default "↕" (.Get 1) }}</span>
-  </label>
-  <input id="{{ $id }}-{{ .Ordinal }}" type="checkbox" class="gdoc-expand__control hidden" />
-  <div class="gdoc-markdown--nested gdoc-expand__content">
-    {{ .Inner | $.Page.RenderString }}
-  </div>
-</div>
 
 
