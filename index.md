@@ -241,8 +241,26 @@ adf.test(temp_data$TEMPERATURE, alternative = "stationary")
 The test statistic is `-11.987`. This value is compared with critical values from the Dickey-Fuller table. A very negative test statistic (as in this case) strongly indicates that the null hypothesis can be rejected. The null hypothesis assumes that this time series is non-stationary (it has a unit root). Since the p-value is very small (smaller than common significance levels 0.5), we can reject the null hypothesis that is time series it not stable.
 
 #### (b) Normality of Residual Check
-Another important assumption to check is the Normality of Residual. This can be done 
-
+Another important assumption to check is the Normality of Residual. Two easy ways to check this is through a histogram of residuals and a Q-Q plot, which can be done easily by the following code:
+```
+# Check Normality (Histogram)
+hist(residuals, main = "Histogram of Residuals", xlab = "Residuals")
+```
+```
+# Check Normality (Q-Q plot)
+qqnorm(residuals)
+qqline(residuals, col = "red")
+```
+Here are the outcomes:
+<table align="center">
+  <tr>
+    <td>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/two_plots_his_QQ.png" alt="Histogram and Q-Q plot" width="700"/>
+      <p><em>Figure 4: Histogram and Q-Q plot</em></p>
+    </td>
+  </tr>
+</table>
+Both plots look good. The histogram on the left shows that the residuals are approximately symmetrically distributed, resembling a normal distribution with a peak near zero. The Q-Q plot on the right further confirms normality, as most points align closely with the red diagonal line, indicating that the residuals follow a theoretical normal distribution. We are good to move to the forecasting now!
 
 
 # _Part III: Forecasting_
