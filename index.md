@@ -184,7 +184,8 @@ In general, the trend component offers insights into long-term climatic changes,
 
 
 ### 5. Stationarity Check
-Before we move to part III: Data forecasting, it is important to perform stationary check to our dataset. Stationarity is a fundamental assumption for many time series forecasting methods. A stationary series will show constant mean and variance over time, with no visible trend or seasonality. A way to check this is to use the rolling mean and standard deviation from the `zoo` library. 
+Before we move to part III: Data forecasting, it is important to perform stationary check to our dataset. Stationarity is a fundamental assumption for many time series forecasting methods. A stationary series will show constant mean and variance over time, with no visible trend or seasonality. In our case, we will be using looking at rolling mean and rolling standard deviations. These metrics are computed over a moving window (or "rolling window") of data points. The window slides through the dataset, recalculating the mean or standard deviation for each new position. Here we set the k = 12 for the rolling windows because 12 months is a year. 
+A way to check this is to use the rolling mean and standard deviation from the `zoo` library. 
 ```r
 # Compute rolling mean and standard deviation
 roll_mean <- zoo::rollmean(temp_data$TEMPERATURE, k = 12, fill = NA)
@@ -193,7 +194,7 @@ roll_sd <- zoo::rollapply(temp_data$TEMPERATURE, width = 12, FUN = sd, fill = NA
 
 Then we can visualize it to see if they change over time by running the following code:
 ```r
-plot(temp_data$TEMPERATURE, type = "l", col = "blue", ylab = "Temperature", xlab = "Time")
+plot(temp_data$TEMPERATURE, type = "l", col = "blue", ylab = "Temperature", xlab = "Number of Month from 2000")
 lines(roll_mean, col = "red", lty = 2)  # Rolling mean
 lines(roll_sd, col = "green", lty = 2)  # Rolling standard deviation
 legend("topright", legend = c("Original", "Rolling Mean", "Rolling SD"), col = c("blue", "red", "green"), lty = c(1, 2, 2))
@@ -208,7 +209,7 @@ Here is the plot, what can we tell from it?
   </tr>
 </table>
 
-Note that the x-axis represents the number of data (which in our case is 'Month'), this would not affect our observations of rolling mean and rolling standard deviations. We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. We are good to start forecasting now!
+We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. We are good to start forecasting now!
 
 
 # _Part III: Forecasting_
