@@ -5,7 +5,9 @@ library(dplyr)
 library(nasapower)
 library(lubridate)
 library(zoo)
-
+library(tseries)
+library(knitr)
+library(rmarkdown)
 
 # Part I - data wrangling 
 #install.packages("nasapower")
@@ -65,8 +67,24 @@ dev.off()
 roll_mean <- zoo::rollmean(temp_data$TEMPERATURE, k = 12, fill = NA)
 roll_sd <- zoo::rollapply(temp_data$TEMPERATURE, width = 12, FUN = sd, fill = NA)
 
-plot(temp_data$TEMPERATURE, type = "l", col = "blue", ylab = "Temperature", xlab = "Time")
+png("plots/Stationarity_Check.png", width = 15, height = 10, units = "cm", bg = "white", res = 150)
+plot(temp_data$TEMPERATURE, type = "l", col = "blue", ylab = "Temperature", xlab = "Number of Month from 2000")
 lines(roll_mean, col = "red", lty = 2)  # Rolling mean
 lines(roll_sd, col = "green", lty = 2)  # Rolling standard deviation
 legend("topright", legend = c("Original", "Rolling Mean", "Rolling SD"), col = c("blue", "red", "green"), lty = c(1, 2, 2))
+dev.off()
+
+## Another (rather formal) way to test stationarity
+library(tseries)
+adf.test(temp_data$TEMPERATURE, alternative = "stationary")
+
+
+# Autocorrelation check
+model <- auto.arima(temp_data$TEMPERATURE)
+residuals <- residuals(model)
+# Check Normality
+hist(residuals, main = "Histogram of Residuals", xlab = "Residuals")
+qqnorm(residuals)
+qqline(residuals, col = "red")
+shapiro.test(residuals)
 

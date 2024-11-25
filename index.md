@@ -8,7 +8,7 @@ output: html_document
 # Tutorial aims 
 
 1. Understand the fundamentals of time series analysis and its applications in environmental data.
-2. Learn how to preprocess, visualize, and decompose time series datasets for meaningful insights.
+2. Learn how to preprocess, visualize, and decompose time series dataset for meaningful insights.
 3. Gain hands-on experience with forecasting techniques to predict trends in environmental data.
 4. Develop skills in using R and relevant packages for analyzing time series data effectively.
 
@@ -187,7 +187,12 @@ There dataset is decomposed into the following four panels:
 In general, the trend component offers insights into long-term climatic changes, useful for climate modeling and environmental studies. Further more, the decomposition shows strong seasonality, which can be leveraged for accurate seasonal forecasting later.
 
 
-### 5. Stationarity Check
+### 5. Check important assumptions
+There are some important assumptions to check before going to forecasting (eg, Stationarity, autocorrelation and Independence of Residuals...). In this tutorial, our main focus will be on the forecasting so we would not spend much time checking through all the assumptions. Here, we will only check two of the main assumptions: **Stationarity** and **Normality of Residuals** to show you how things work!
+
+> ***_NOTE:_***  If you would like to know what each assumption is and how to check them using R, please refer to this amazing [Youtube video](https://www.youtube.com/watch?v=eTZ4VUZHzxw&t=204s)!
+
+#### (a) Stationarity Check
 Before we move to part III: Data forecasting, it is important to perform stationary check to our dataset. Stationarity is a fundamental assumption for many time series forecasting methods. A stationary series will show constant mean and variance over time, with no visible trend or seasonality. In our case, we will be using looking at rolling mean and rolling standard deviations. These metrics are computed over a moving window (or "rolling window") of data points. The window slides through the dataset, recalculating the mean or standard deviation for each new position. Here we set the k = 12 for the rolling windows because 12 months is a year. 
 A way to check this is to use the rolling mean and standard deviation from the `zoo` library. 
 ```r
@@ -213,7 +218,7 @@ Here is the plot, what can we tell from it?
   </tr>
 </table>
 
-We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. We are good to start forecasting now!
+We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. 
 
 {% capture callout %}
 
@@ -233,21 +238,11 @@ adf.test(temp_data$TEMPERATURE, alternative = "stationary")
 
 ```
 
-Here is the output:
-```{r, echo=TRUE, message=FALSE, warning=FALSE}
-# Load necessary library
-library(knitr)
+The test statistic is `-11.987`. This value is compared with critical values from the Dickey-Fuller table. A very negative test statistic (as in this case) strongly indicates that the null hypothesis can be rejected. The null hypothesis assumes that this time series is non-stationary (it has a unit root). Since the p-value is very small (smaller than common significance levels 0.5), we can reject the null hypothesis that is time series it not stable.
 
-# Create a data frame to store the results
-adf_results <- data.frame(
-  Metric = c("Test Statistic", "Lag Order", "P-value", "Alternative Hypothesis"),
-  Value = c("-11.987", "6", "<0.01", "Stationary")
-)
+#### (b) Normality of Residual Check
+Another important assumption to check is the Normality of Residual. This can be done 
 
-# Display the table using knitr::kable
-kable(adf_results, caption = "Augmented Dickey-Fuller Test Results")
-```
-The test statistic is `-11.987`. This value is compared with critical values from the Dickey-Fuller table. A very negative test statistic (as in this case) strongly indicates that the null hypothesis can be rejected. The null hypothesis assumes that this time series is non-stationary (it has a unit root). Since the p-value is very small (smaller than common significance levels 0.5), we can reject the null hypothesis that is time series it not stable. 
 
 
 # _Part III: Forecasting_
