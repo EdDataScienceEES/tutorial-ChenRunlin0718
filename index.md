@@ -198,6 +198,21 @@ lines(roll_mean, col = "red", lty = 2)  # Rolling mean
 lines(roll_sd, col = "green", lty = 2)  # Rolling standard deviation
 legend("topright", legend = c("Original", "Rolling Mean", "Rolling SD"), col = c("blue", "red", "green"), lty = c(1, 2, 2))
 ```
+Here is the plot, what can we tell from it?
+<table align="center">
+  <tr>
+    <td>
+      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/Stationarity_Check.png" alt="Stationarity_Check" width="700"/>
+      <p><em>Figure 3: Stationarity Check</em></p>
+    </td>
+  </tr>
+</table>
+
+Note that the x-axis represents the number of data (which in our case is 'Month'), this would not affect our observations of rolling mean and rolling standard deviations. We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. We are good to start forecasting now!
+
+
+# _Part III: Forecasting_
+
 
 
 
