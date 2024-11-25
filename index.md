@@ -49,6 +49,20 @@ Time series data are sequential data points collected over time. In environmenta
 
 In part 1, we will be working with a dataset from *NASA* that captures the temperature of earth and try to do some data wrangling with it to make it easier for later analysis. In part 2, we will look into some basic and fundamental techniques that can be used to deal with time series data. In part 3, things are going to get interesting because we are going to build a forecasting Models that is able to predict the temperature in the future. 
 
+> ***_NOTE:_***  Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
+
+```{r, echo=FALSE, results='asis'}
+cat('<div class="callout info">
+    <h3>Set Operations</h3>
+    <ul>
+        <li><strong>setequal(x, y)</strong>: Returns <code>TRUE</code> if all observations in <code>x</code> and <code>y</code> are identical.</li>
+        <li><strong>intersect(x, y)</strong>: Finds observations present in both <code>x</code> and <code>y</code>.</li>
+        <li><strong>setdiff(x, y)</strong>: Finds observations present in <code>x</code>, but not in <code>y</code>.</li>
+        <li><strong>union(x, y)</strong>: Finds unique observations in <code>x</code> and <code>y</code>. Use <code>union_all()</code> to retain duplicates.</li>
+    </ul>
+</div>')
+
+
 
 
 # _Part I: Data Preparation and Exploration_
@@ -208,19 +222,15 @@ We can see clearly from the plot that the rolling mean indicates a generally con
 
 {% capture callout %}
 
-Ty `print(roll_mean)` and `print(roll_sd)`, think about why there are 5 _NA_ values at the beginning and the end of them? 
+Try `print(roll_mean)` and `print(roll_sd)`, why is there 5 `NA` values at the beginning and the end of them? Hint: think about why we need the `fill = NA` argument when we were computing the rolling mean and rolling standard deviaton.
   
 {% endcapture %}
 {% include callout.html content=callout colour=alert %}
 
+The Answer is that: The `zoo::rollmean` function in R calculates the moving average with a specified window size k. When you specify `k = 12`, it calculates the mean over a rolling window of 12 data points. A window size of 12 means that the function requires 12 data points to calculate the first value of the moving average. For the first and last 5 points in your dataset, there aren't enough data points to form a complete window of size 12, and that is why we need to `fill = NA` argument! The `fill = NA` argument ensures that where there aren't enough data points to calculate the moving average, `NA` is inserted instead of a numeric value.
 
 
 # _Part III: Forecasting_
-
-
-
-
-
 
 
 {{ $id := substr (sha1 .Inner) 0 8 }}
