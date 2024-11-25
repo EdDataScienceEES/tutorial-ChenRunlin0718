@@ -222,10 +222,44 @@ Try `print(roll_mean)` and `print(roll_sd)`, why is there 5 `NA` values at the b
 {% endcapture %}
 {% include callout.html content=callout colour=alert %}
 
+
 The Answer is that: The `zoo::rollmean` function in R calculates the moving average with a specified window size k. When you specify `k = 12`, it calculates the mean over a rolling window of 12 data points. A window size of 12 means that the function requires 12 data points to calculate the first value of the moving average. For the first and last 5 points in your dataset, there aren't enough data points to form a complete window of size 12, and that is why we need to `fill = NA` argument! The `fill = NA` argument ensures that where there aren't enough data points to calculate the moving average, `NA` is inserted instead of a numeric value.
+
+### Another (rather formal) way to check stationarity
+If you are a math person and feel like looking at the mean and variance visually is not convincing enough, there are several formal ways to reduce your concerns! One of them is the `Augmented Dickey-Fuller (ADF) Test` from the  `tseries` library which checks whether a time series is stationary or not. We can perform the test using the following code
+
+```r
+adf.test(temp_data$TEMPERATURE, alternative = "stationary")
+
+```
+
+Here is the output:
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+# Load necessary library
+library(knitr)
+
+# Create a data frame to store the results
+adf_results <- data.frame(
+  Metric = c("Test Statistic", "Lag Order", "P-value", "Alternative Hypothesis"),
+  Value = c("-11.987", "6", "<0.01", "Stationary")
+)
+
+# Display the table using knitr::kable
+kable(adf_results, caption = "Augmented Dickey-Fuller Test Results")
+```
+The test statistic is `-11.987`. This value is compared with critical values from the Dickey-Fuller table. A very negative test statistic (as in this case) strongly indicates that the null hypothesis can be rejected. The null hypothesis assumes that this time series is non-stationary (it has a unit root). Since the p-value is very small (smaller than common significance levels 0.5), we can reject the null hypothesis that is time series it not stable. 
 
 
 # _Part III: Forecasting_
+
+
+
+
+
+
+
+
+
 
 ```{r, echo=FALSE, results='asis'}
 cat('

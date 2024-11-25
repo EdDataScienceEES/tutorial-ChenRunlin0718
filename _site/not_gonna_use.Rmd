@@ -1,0 +1,30 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+# For 'introduction'
+
+<div class="callout ">
+    
+<p>Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as <em>%&gt;%</em> and <em>summarise()</em>. If not, Coding Club has got you covered: check out the <a href="https://ourcodingclub.github.io/tutorials/intro-to-r/">Intro to R tutorial</a>!</p>
+
+
+</div>
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
