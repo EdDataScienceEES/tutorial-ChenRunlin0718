@@ -227,7 +227,8 @@ The Answer is that: The `zoo::rollmean` function in R calculates the moving aver
 
 # _Part III: Forecasting_
 
-
+```{r, echo=FALSE, results='asis'}
+cat('
 <div>
     <p>Now, take the challenge to create a <code>final_animal</code> table by combining <code>animal_new</code> with your table <code>animal_joined</code>!</p>
     <button onclick="toggleSolution()" class="toggle-button">Click here for the solution!</button>
@@ -241,8 +242,8 @@ animal_final <- animal_joined %>%
         <p>Notice that <code>bind_rows()</code> was not appropriate here because the column order was different between the two tables...</p>
     </div>
 </div>
-
-
+')
+```
 
 
 
