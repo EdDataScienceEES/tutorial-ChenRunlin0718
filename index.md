@@ -51,18 +51,13 @@ In part 1, we will be working with a dataset from *NASA* that captures the tempe
 
 > ***_NOTE:_***  Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
 
-```{r, echo=FALSE, results='asis'}
-cat('<div class="callout info">
-    <h3>Set Operations</h3>
-    <ul>
-        <li><strong>setequal(x, y)</strong>: Returns <code>TRUE</code> if all observations in <code>x</code> and <code>y</code> are identical.</li>
-        <li><strong>intersect(x, y)</strong>: Finds observations present in both <code>x</code> and <code>y</code>.</li>
-        <li><strong>setdiff(x, y)</strong>: Finds observations present in <code>x</code>, but not in <code>y</code>.</li>
-        <li><strong>union(x, y)</strong>: Finds unique observations in <code>x</code> and <code>y</code>. Use <code>union_all()</code> to retain duplicates.</li>
-    </ul>
-</div>')
 
+{% capture callout %}
 
+Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
+  
+{% endcapture %}
+{% include callout.html content=callout colour=alert %}
 
 
 # _Part I: Data Preparation and Exploration_
