@@ -206,6 +206,14 @@ Here is the plot, what can we tell from it?
 
 We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. We are good to start forecasting now!
 
+{% capture callout %}
+
+Ty `print(roll_mean)` and `print(roll_sd)`, think about why there are 5 _NA_ values at the beginning and the end of them? 
+  
+{% endcapture %}
+{% include callout.html content=callout colour=alert %}
+
+
 
 # _Part III: Forecasting_
 
