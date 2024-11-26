@@ -86,7 +86,7 @@ model <- auto.arima(temp_data$TEMPERATURE)
 residuals <- residuals(model)
 
 # Set up a layout with 1 row and 2 columns
-png("plots/two_plots_his_QQ.png", width = 15, height = 10, units = "cm", bg = "white", res = 150)
+png("plots/two_plots_his_QQ.png", width = 17, height = 10, units = "cm", bg = "white", res = 130)
 par(mfrow = c(1, 2))
 # First plot
 hist(residuals, main = "Histogram of Residuals", xlab = "Residuals")
@@ -109,12 +109,11 @@ forecasted <- forecast(best_model, h = 12)
 print(forecasted)
 
 # Generate yearly labels for 2000 to 2022 (23 years + 1 year for forecasts)
-years <- seq(2000, 2022, by = 100)  # Adjust end year to include forecasts
+years <- seq(2000, 2022, by = 10)  # Adjust end year to include forecasts
 
 # Plot the forecast without the default x-axis
 plot(forecasted, xaxt = "n", main = "Temperature Forecast")
 
-# Add custom x-axis with yearly labels
-axis(1, at = seq(1, length(temp_data) + 12, by = 12), labels = years)
+
 
 

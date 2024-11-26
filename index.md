@@ -241,7 +241,6 @@ Here are the outcomes:
 Both plots look good. The histogram on the left shows that the residuals are approximately symmetrically distributed, resembling a normal distribution with a peak near zero. The Q-Q plot on the right further confirms normality, as most points align closely with the red diagonal line, indicating that the residuals follow a theoretical normal distribution. We are good to move to the forecasting now!
 
 
-
 # _Part III: Forecasting_
 
 
