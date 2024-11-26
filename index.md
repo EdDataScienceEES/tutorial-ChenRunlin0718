@@ -143,15 +143,9 @@ ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
     y = "Temperature"
   )
 ```
-This is what the plot looks like:
-<table align="center">
-  <tr>
-    <td>
-      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/Temperature_Trends_Over_Time.png" alt="Temperature trend" width="700"/>
-      <p><em>Figure 1: Temperature trend over time</em></p>
-    </td>
-  </tr>
-</table>
+
+<center><img src="plots/Temperature_Trends_Over_Time.png" alt="Img" width="589"/></center>
+
 
 We can clearly see that the temperature exhibits a clear seasonal pattern, with regular fluctuations that likely correspond to yearly changes (e.g., summer and winter cycles). The recurring peaks represent warmer months, while the troughs correspond to cooler months, highlighting predictable seasonal variability. Also, there does not appear to be a significant long-term upward or downward trend, suggesting relative stability in Edinburgh's average temperature from 2000 to the end of 2020. 
 
@@ -166,14 +160,8 @@ plot(decomposed_stl, main = "STL Decomposition of the Data")
 ```
 The `ts` function converts our temperature data into a time series object and the `stl` function performs seasonal and trend decomposition (note that here we use `s.window = "periodic"` to assume a fixed seasonal pattern in the dataset). Run this chunk of code and we will get the plot below:
 
-<table align="center">
-  <tr>
-    <td>
-      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/STL_Decomposition.png" alt="STL Decomposition Plot" width="700"/>
-      <p><em>Figure 2: STL Decomposition Plot</em></p>
-    </td>
-  </tr>
-</table>
+<center><img src="plots/STL_Decomposition.png" alt="STL Decomposition Plo" width="589"/></center>
+
 
 There dataset is decomposed into the following four panels:
 **- Data (Observed Time Series):** The top panel represents the original temperature data, which shows both seasonal patterns and an underlying trend. This is just what we have in Figure 1. 
@@ -208,15 +196,10 @@ lines(roll_mean, col = "red", lty = 2)  # Rolling mean
 lines(roll_sd, col = "green", lty = 2)  # Rolling standard deviation
 legend("topright", legend = c("Original", "Rolling Mean", "Rolling SD"), col = c("blue", "red", "green"), lty = c(1, 2, 2))
 ```
+
 Here is the plot, what can we tell from it?
-<table align="center">
-  <tr>
-    <td>
-      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/Stationarity_Check.png" alt="Stationarity_Check" width="700"/>
-      <p><em>Figure 3: Stationarity Check</em></p>
-    </td>
-  </tr>
-</table>
+
+<center><img src="plots/Stationarity_Check.png" alt="Img" width="589"/></center>
 
 We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. 
 
@@ -252,35 +235,15 @@ qqnorm(residuals)
 qqline(residuals, col = "red")
 ```
 Here are the outcomes:
-<table align="center">
-  <tr>
-    <td>
-      <img src="https://github.com/EdDataScienceEES/tutorial-ChenRunlin0718/blob/master/plots/two_plots_his_QQ.png" alt="Histogram and Q-Q plot" width="700"/>
-      <p><em>Figure 4: Histogram and Q-Q plot</em></p>
-    </td>
-  </tr>
-</table>
+
+<center><img src="plots/two_plots_his_QQ.png" alt="Img" width="589"/></center>
+
 Both plots look good. The histogram on the left shows that the residuals are approximately symmetrically distributed, resembling a normal distribution with a peak near zero. The Q-Q plot on the right further confirms normality, as most points align closely with the red diagonal line, indicating that the residuals follow a theoretical normal distribution. We are good to move to the forecasting now!
+
 
 
 # _Part III: Forecasting_
 
-
-
-
-
-
-
-
-
-
-```{r, echo=FALSE, results='asis'}
-cat('
-<div class="callout {{ include.colour }}">
-    <p>Your content goes here.</p>
-</div>
-')
-```
 
 
 
