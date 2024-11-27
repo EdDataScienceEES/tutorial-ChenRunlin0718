@@ -216,11 +216,11 @@ The test statistic is `-11.987`. This value is compared with critical values fro
 
 #### (b) Normality of Residual Check
 Another important assumption to check is the Normality of Residual. Two easy ways to check this is through a histogram of residuals and a Q-Q plot, which can be done easily by the following code:
-```
+```r
 # Check Normality (Histogram)
 hist(residuals, main = "Histogram of Residuals", xlab = "Residuals")
 ```
-```
+```r
 # Check Normality (Q-Q plot)
 qqnorm(residuals)
 qqline(residuals, col = "red")
@@ -248,12 +248,12 @@ Now that we’ve prepared and analyzed our time series data, it’s time to buil
 ### 6. Select an appropriate forecasting model.
 The first step in forecasting is selecting the right model. For this tutorial, we’ll use the ARIMA (Auto-Regressive Integrated Moving Average) model, as it is versatile and works well for time series data with trends and seasonality. Good news for us, R provides the `auto.arima()` function from the `forecast` library, which automatically selects the best ARIMA model for the data by optimizing the parameters:
 
-```
+```r
 # Automatically find the best ARIMA model
 best_ARIMA_model <- auto.arima(temp_data$TEMPERATURE, seasonal = TRUE)
 ```
 Now run `summary(best_ARIMA_model)`. This will display the selected model's details, including its parameters and diagnostic information. 
-```
+```r
 # Display the model summary
 summary(best_model)
 ```
@@ -337,7 +337,7 @@ Montly_2023_data <- temp_data_2023 %>%
   summarise(TEMPERATURE = mean(T2M, na.rm = TRUE))
 ```
 Then we can fit the true temperature into our forecating plot using the following code:
-```
+```r
 plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temperature", xlab = "Year")
 # Add custom x-axis labels with yearly intervals
 axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 24, by = 12), labels = years)
