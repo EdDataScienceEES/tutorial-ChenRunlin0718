@@ -605,7 +605,7 @@ Your output should displays the accuracy metrics for the detrended model (`detre
 - **The detrended model has higher MAPE and MASE values, indicating it might not perform as well relative to smaller-scale data points or a naive benchmark.**
 - **Both models exhibit minimal residual autocorrelation, meaning either is valid for forecasting.**
 </details>
-<div>
+</div>
 
 
 ## Summary and Reflection
