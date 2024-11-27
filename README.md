@@ -1,4 +1,25 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/6eRt7-90)
+
+## Tutorial - Runlin Chen (s2153060)
+The aim of this tutorial is to provide a comprehensive and approachable guide to time series analysis and forecasting using temperature data in Edinburgh. This tutorial is designed for advanced undergraduate or early graduate students in Environmental or Ecological Sciences who are looking to enhance their data science skills. By the end of this tutorial, learners will:
+
+- Understand the fundamental concepts of time series analysis, including decomposition, stationarity, and autocorrelation.
+- Gain hands-on experience in using R to preprocess, analyse, and forecast time series data.
+- Learn how to assess and improve model performance and interpret forecasting results effectively.
+- Apply these techniques to real-world problems to understand climate trends and predict environmental changes.
+
+## Table of Contents
+- Data - [Raw data](/data)
+- Preregistration - [Preregistration](/preregistration)
+- Scripts -  [R script](/script)
+  - challenge3_starter_script.R - [The script used](/script/challenge3_starter_script.R)
+  - draft_challenge3_script.R - [Other unused scripts](/script/draft_challenge3_script.R)
+- Report - [Context and Importance of study](/report)
+  - Report (R Markdown) - [Report](/report/Challenge3_report.md)
+- Plots - [Plot image outputs](/plots)
+
+
+---
 # tutorial-instructions
 ## Instructions for Tutorial Assignment
 
