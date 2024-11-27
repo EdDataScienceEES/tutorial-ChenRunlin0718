@@ -31,13 +31,14 @@ a) Identifying outliers and spikes using visualization techniques.
 b) Using statistical tests to confirm anomalies.
 
 ### Part III: Forecasting
-6. Building Forecasting Models:
-a) Introduction to ARIMA models and their suitability for environmental data.
-b) Automatically selecting the best model with auto.arima.
+6. Select an appropriate forecasting model.
 
-7. Generating Predictions:
-a) Forecasting future values and confidence intervals.
-b) Plotting and interpreting forecasts.
+
+7. Generate forecasts for future time points.
+
+8. Evaluate the model's performance.
+9. Visualize and interpret the forecast results.
+
 
 ### (Optional) Part IV: Advanced Techniques and Challenge
 8. Advanced Topics:
@@ -243,9 +244,155 @@ Both plots look good. The histogram on the left shows that the residuals are app
 
 # _Part III: Forecasting_
 
+Now that we’ve prepared and analyzed our time series data, it’s time to build a forecasting model and generate future predictions! In this section, we will:
+
+**- Select an appropriate forecasting model.** 
+
+**- Generate forecasts for future time points.** 
+
+**- Evaluate the model's performance.** 
+
+**- Visualize and interpret the forecast results.** 
+
+
+### 6. Select an appropriate forecasting model.
+The first step in forecasting is selecting the right model. For this tutorial, we’ll use the ARIMA (Auto-Regressive Integrated Moving Average) model, as it is versatile and works well for time series data with trends and seasonality. Good news for us, R provides the `auto.arima()` function from the `forecast` library, which automatically selects the best ARIMA model for the data by optimizing the parameters:
+
+```
+# Automatically find the best ARIMA model
+best_ARIMA_model <- auto.arima(temp_data$TEMPERATURE, seasonal = TRUE)
+```
+Now run `summary(best_ARIMA_model)`. This will display the selected model's details, including its parameters and diagnostic information. 
+```
+# Display the model summary
+summary(best_model)
+```
+If you have never used ARIMA model before, this table may looks confusing to you. Let's break it down!
+
+#### (a). `ARIMA(5,0,0)`:
+
+- ARIMA(p,d,q) refers to the number of autoregressive terms (p), the degree of differencing (d), and the moving average terms (q). In our case:
+  - **`p=5`:** The model includes five autoregressive terms, meaning the current value is influenced by the previous five values in the series.
+  - **`d=0`:**  No differencing was applied, indicating that the series was stationary without the need for transformation.
+  - **`q=0`:** There are no moving average terms in the model.
+
+#### (b). Coefficients:
+
+- The table lists the coefficients for the autoregressive terms (**ar1** to **ar5**) and the overall **mean**:
+  - **`ar1 = 0.7249`**: Indicates a strong positive relationship between the current value and the first lag.
+  - **`ar2 = -0.0231`**: Shows a very weak negative relationship between the current value and the second lag.
+  - **`ar3, ar4, ar5`**: These terms show progressively weaker relationships, with some negative contributions.
+  - **`mean = 8.4191`**: The average value of the series, which is included because the series has a non-zero mean.
+  
+- The **`standard errors (s.e.)`** for the coefficients indicate the uncertainty associated with each estimate. Smaller standard errors suggest more reliable estimates.
+
+#### (c). Variance and Information Criteria
+
+- **`Sigma^2`**: The estimated variance of the residuals, which is 1.547. A lower value generally indicates better model fit.
+
+- **`Log-Likelihood`**: The log of the likelihood function for the fitted model is -451.16. This is used to calculate the information criteria.
+
+- **`AIC` (Akaike Information Criterion) = 916.32**: AIC measures the quality of a statistical model by balancing its fit to the data and its complexity. Lower AIC values normally indicate a better model because it suggests a good balance between model accuracy and simplicity.
+
+- **`BIC` (Bayesian Information Criterion) = 941.66**: Similar to AIC, BIC also balances model fit and complexity but penalizes complexity more heavily than AIC.
+  - These are measures of model fit, where lower values indicate a better model. We can compare these values with other models to select the best one if necessary. 
+
+#### (d). Training Set Error Measures
+
+The table provides several error metrics for the training set:
+
+- **`ME` (Mean Error)**: -0.00621183
+  - Indicates the average bias of the residuals. A value close to 0 suggests the model is unbiased.
+
+- **`RMSE` (Root Mean Squared Error)**: 1.230134
+  - Measures the average magnitude of error. A lower value indicates a better model fit.
+
+- **`MAE` (Mean Absolute Error)**: 0.9750409
+  - Similar to RMSE but less sensitive to outliers.
+
+- **`MPE` (Mean Percentage Error)**: -0.2009136
+  - Indicates the average percentage error. Negative value shows slight underestimation.
+
+- **`MAPE` (Mean Absolute Percentage Error)**: 20.80954
+  - Indicates the average absolute percentage error. A MAPE of ~20% is considered moderate; better models typically have MAPE < 10%.
+
+- **`MASE` (Mean Absolute Scaled Error)**: 0.4741914
+  - Scales the MAE to make it comparable across datasets. A value < 1 suggests the model performs better than a naive forecast.
+
+- **`ACF1` (Autocorrelation of Residuals at Lag 1)**: -0.0540435
+  - Indicates almost no autocorrelation at lag 1, which is a good sign of well-behaved residuals.
+
+### 7. Generate forecasts for future time points.
+### (a). Forecasting the temperature next year (the next 12 months)
+Now that we have our ARIMA model and we have ideas of what each value represents, we can forecast temperature for the next 12 months! We can do this using the following code:
+```r
+# Forecast for the next 12 months, `h` here set teh forecast horizon to 12 month (5 years)
+forecasted_12month <- forecast(best_model, h = 12)
+
+# Display the forecast summary if you want
+# print(forecasted_12month)
+
+# Generate yearly labels based on the range of your data
+years <- seq(2000, 2024, by = 1)  # Adjust the range to include the forecast horizon
+
+# Plot the forecast without the default x-axis because the the default x-axis is 'month'
+plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temperature", xlab = "Year")
+
+# Add custom x-axis labels with yearly intervals
+axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 24, by = 12), labels = years)
+
+```
+By running this chunk of code, you should get the following plot:
+
+<center><img src="plots/forecasted_12month.png" alt="forecast 12months" width="589"/></center>
+
+We can see that the plot shows clear seasonal patterns in the temperature data. The forecast (blue line) continues the seasonal pattern into the future (12 months). The shaded area around the forecast represents the prediction intervals, showing the range of uncertainty in the forecast:
+
+- The inner shaded region represents the **80% confidence interval**.
+
+- The outer shaded region represents the **95% confidence interval**.
+
+The smooth continuation of seasonal cycles suggests the ARIMA model captures the underlying patterns well.
+
+### (b)  (Optional) Compare the forecasted temperature with real-world temperature
+For those of you who are really curious about how accurate this model is, we can try to fit the data of the true temperature in 2023 in Edinburgh to this model. We can extract this data using similar to what we did at the first place!
+Firstly, let's get the dataset from **NASAPOWER**
+```r
+### Get dataset of 2023
+temp_data_2023 <- get_power(
+  community = "AG",
+  lonlat = c(-3.1883,55.9533),   # Edinburgh's Longitude and Latitude
+  pars = "T2M",      # Temperature at 2 meters
+  temporal_api = "daily",
+  dates = c("2023/01/01", "2023/12/31")
+)
+# Get the mean temperature of each month
+Montly_2023_data <- temp_data_2023 %>%
+  group_by(YEAR, MM) %>%
+  summarise(TEMPERATURE = mean(T2M, na.rm = TRUE))
+```
+Then we can fit the true temperature into our forecating plot using the following code:
+```
+plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temperature", xlab = "Year")
+# Add custom x-axis labels with yearly intervals
+axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 24, by = 12), labels = years)
+# Overlay the real-life data on the plot
+lines(
+  x = seq(length(temp_data$TEMPERATURE) + 1, length(temp_data$TEMPERATURE) + 12), 
+  y = Montly_2023_data$TEMPERATURE, 
+  col = "red", 
+  lwd = 2
+)
+```
+Here is what the plot looks like now:
+<center><img src="true_with_forecasted_12month.png" alt="forecast 12months with true data" width="589"/></center>
+
+We can see that our prediction of the monthly temperature in 2023 fits the real-life temperatures very well!
+
+### (c). (Optional) Forecasting the temperature next 5 years (the next 60 months)
 
 
 
-
-
+### 8. Evaluate the model's performance.
+### 9. Visualize and interpret the forecast results.
 

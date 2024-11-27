@@ -98,22 +98,54 @@ dev.off()
 # shapiro.test(residuals)
 
 ## Part III
+### 6. Select an appropriate forecasting model.
+### ARIMA Model
 # Automatically find the best ARIMA model
 best_model <- auto.arima(temp_data$TEMPERATURE, seasonal = TRUE)
+
+# Display the model summary
 summary(best_model)
 
-# Plot residuals to check the model
-checkresiduals(best_model)
 
-forecasted <- forecast(best_model, h = 12)
-print(forecasted)
+### 7. Generate forecasts for future time points.
+# Forecast for the next 12 months
+forecasted_12month <- forecast(best_model, h = 12)
 
-# Generate yearly labels for 2000 to 2022 (23 years + 1 year for forecasts)
-years <- seq(2000, 2022, by = 10)  # Adjust end year to include forecasts
+# Display the forecast summary
+print(forecasted_12month)
 
-# Plot the forecast without the default x-axis
-plot(forecasted, xaxt = "n", main = "Temperature Forecast")
+# Generate yearly labels based on the range of your data
+years <- seq(2000, 2024, by = 1)  # Adjust the range to include the forecast horizon
+
+png("plots/forecasted_12month.png", width = 17, height = 10, units = "cm", bg = "white", res = 130)
+# Plot the forecast without the default x-axis because the the default x-axis is 'month'
+plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temperature", xlab = "Year")
+# Add custom x-axis labels with yearly intervals
+axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 24, by = 12), labels = years)
+dev.off()
+
+### dataset of 2023
+temp_data_2023 <- get_power(
+  community = "AG",
+  lonlat = c(-3.1883,55.9533),   # Edinburgh's Longitude and Latitude
+  pars = "T2M",      # Temperature at 2 meters
+  temporal_api = "daily",
+  dates = c("2023/01/01", "2023/12/31")
+)
+Montly_2023_data <- temp_data_2023 %>%
+  group_by(YEAR, MM) %>%
+  summarise(TEMPERATURE = mean(T2M, na.rm = TRUE))
 
 
-
-
+png("plots/true_with_forecasted_12month.png", width = 17, height = 10, units = "cm", bg = "white", res = 130)
+plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temperature", xlab = "Year")
+# Add custom x-axis labels with yearly intervals
+axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 24, by = 12), labels = years)
+# Overlay the real-life data on the plot
+lines(
+  x = seq(length(temp_data$TEMPERATURE) + 1, length(temp_data$TEMPERATURE) + 12), 
+  y = Montly_2023_data$TEMPERATURE, 
+  col = "red", 
+  lwd = 2
+)
+dev.off()
