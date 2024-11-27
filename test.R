@@ -124,6 +124,8 @@ plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temp
 axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 24, by = 12), labels = years)
 dev.off()
 
+
+# (Optional) Compare the forecasted temperature with real-world temperature
 ### dataset of 2023
 temp_data_2023 <- get_power(
   community = "AG",
@@ -136,7 +138,6 @@ Montly_2023_data <- temp_data_2023 %>%
   group_by(YEAR, MM) %>%
   summarise(TEMPERATURE = mean(T2M, na.rm = TRUE))
 
-
 png("plots/true_with_forecasted_12month.png", width = 17, height = 10, units = "cm", bg = "white", res = 130)
 plot(forecasted_12month, xaxt = "n", main = "Temperature Forecast", ylab = "Temperature", xlab = "Year")
 # Add custom x-axis labels with yearly intervals
@@ -148,4 +149,28 @@ lines(
   col = "red", 
   lwd = 2
 )
+dev.off()
+
+
+### 8. Evaluate the model's performance.
+# Plot residual diagnostics
+png("plots/forecasted_model_residual_plot.png", width = 17, height = 10, units = "cm", bg = "white", res = 130)
+checkresiduals(best_model)
+dev.off()
+# Calculate accuracy metrics
+accuracy(forecasted)
+
+
+#### 9. Forecast for the next 60 months (5 years)
+forecasted_5_years <- forecast(best_model, h = 60)
+
+# Generate yearly labels including the next 5 years
+years_5_years <- seq(2000, 2027, by = 1)  # Adjust range based on data and forecast horizon
+png("plots/forecasted_15years.png", width = 17, height = 10, units = "cm", bg = "white", res = 130)
+# Plot the forecast without default x-axis
+plot(forecasted_5_years, xaxt = "n", main = "Temperature Forecast for Next 5 Years", 
+     ylab = "Temperature", xlab = "Year")
+
+# Add custom x-axis labels
+axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 60, by = 12), labels = years_5_years)
 dev.off()

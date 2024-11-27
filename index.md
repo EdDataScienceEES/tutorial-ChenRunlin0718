@@ -37,7 +37,8 @@ b) Using statistical tests to confirm anomalies.
 7. Generate forecasts for future time points.
 
 8. Evaluate the model's performance.
-9. Visualize and interpret the forecast results.
+
+
 
 
 ### (Optional) Part IV: Advanced Techniques and Challenge
@@ -50,16 +51,9 @@ Time series data are sequential data points collected over time. In environmenta
 
 In part 1, we will be working with a dataset from *NASA* that captures the temperature of earth and try to do some data wrangling with it to make it easier for later analysis. In part 2, we will look into some basic and fundamental techniques that can be used to deal with time series data. In part 3, things are going to get interesting because we are going to build a forecasting Models that is able to predict the temperature in the future. 
 
-> ***_NOTE:_***  Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
-
-
-{% capture callout %}
-
-Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
-  
-{% endcapture %}
-{% include callout.html content=callout colour=alert %}
-
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+> ***_NOTE:_*** Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
+</div>
 
 # _Part I: Data Preparation and Exploration_
 ## 2. Data Wrangling
