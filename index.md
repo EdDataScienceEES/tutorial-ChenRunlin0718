@@ -297,34 +297,9 @@ If you have never used ARIMA model before, this table may looks confusing to you
 - **`BIC` (Bayesian Information Criterion) = 941.66**: Similar to AIC, BIC also balances model fit and complexity but penalizes complexity more heavily than AIC.
   - These are measures of model fit, where lower values indicate a better model. We can compare these values with other models to select the best one if necessary. 
 
-#### (d). Training Set Error Measures
-
-The table provides several error metrics for the training set:
-
-- **`ME` (Mean Error)**: -0.00621183
-  - Indicates the average bias of the residuals. A value close to 0 suggests the model is unbiased.
-
-- **`RMSE` (Root Mean Squared Error)**: 1.230134
-  - Measures the average magnitude of error. A lower value indicates a better model fit.
-
-- **`MAE` (Mean Absolute Error)**: 0.9750409
-  - Similar to RMSE but less sensitive to outliers.
-
-- **`MPE` (Mean Percentage Error)**: -0.2009136
-  - Indicates the average percentage error. Negative value shows slight underestimation.
-
-- **`MAPE` (Mean Absolute Percentage Error)**: 20.80954
-  - Indicates the average absolute percentage error. A MAPE of ~20% is considered moderate; better models typically have MAPE < 10%.
-
-- **`MASE` (Mean Absolute Scaled Error)**: 0.4741914
-  - Scales the MAE to make it comparable across datasets. A value < 1 suggests the model performs better than a naive forecast.
-
-- **`ACF1` (Autocorrelation of Residuals at Lag 1)**: -0.0540435
-  - Indicates almost no autocorrelation at lag 1, which is a good sign of well-behaved residuals.
-
 ### 7. Generate forecasts for future time points.
 ### (a). Forecasting the temperature next year (the next 12 months)
-Now that we have our ARIMA model and we have ideas of what each value represents, we can forecast temperature for the next 12 months! We can do this using the following code:
+Now that we have our `ARIMA` model and we have ideas of what each value represents, we can forecast temperature for the next 12 months! We can do this using the following code:
 ```r
 # Forecast for the next 12 months, `h` here set teh forecast horizon to 12 month (5 years)
 forecasted_12month <- forecast(best_model, h = 12)
@@ -385,14 +360,98 @@ lines(
 )
 ```
 Here is what the plot looks like now:
-<center><img src="true_with_forecasted_12month.png" alt="forecast 12months with true data" width="589"/></center>
+<center><img src="plots/true_with_forecasted_12month.png" alt="forecast 12months with true data" width="589"/></center>
 
-We can see that our prediction of the monthly temperature in 2023 fits the real-life temperatures very well!
-
-### (c). (Optional) Forecasting the temperature next 5 years (the next 60 months)
-
-
+We can see that our prediction of the monthly temperature in 2023 fits the real-life temperatures very well! The real-world data (red line) sits in the the confidence interval (shaded area) and basically overlap with our predictions.
 
 ### 8. Evaluate the model's performance.
-### 9. Visualize and interpret the forecast results.
+Now let's go back to our first prediction model where we predict the temperature for only the next year. Remember that we generated our model using the following code:
+```r
+best_model <- auto.arima(temp_data$TEMPERATURE, seasonal = TRUE)
+```
+Despite we have examined the accuracy of our model (by comparing them with real-word data in 7(b)), it would be nice to have some statistics supporting our argument. We can firstly evaluate our model by plotting the residuals using simply the `checkresiduals()` function:
+```r
+checkresiduals(best_model)
+```
+This should be what the outcome looks like: 
+<center><img src="plots/forecasted_model_residual_plot.png" alt="Residuals plot from ARIMA(5,0,0)" width="589"/></center>
+
+What can we tell from the plots?
+
+#### Top plot (Residuals Over Time):
+- This plot shows the residuals over time. In our case, the residuals seem centered around zero and do not show any obvious structure, which suggests the model has adequately captured the key patterns in the data, as we expected.
+
+#### Bottom-Left Plot (Autocorrelation Function - ACF):
+- This plot shows the autocorrelation of residuals at different lags. Ideally, most autocorrelations should fall within the blue dashed lines (95% confidence intervals), indicating no significant autocorrelation.
+- Here in our case, the residuals show some significant autocorrelations at early lags, which might suggest the model has not fully captured all the structure in the data. 
+
+#### Bottom-Right Plot (Histogram of Residuals with Density Curve):
+- This plot shows the distribution of residuals overlaid with a normal density curve. In this case, the residuals appear reasonably normal, although there might be slight deviations from normality. The overlaid density curve mostly matches the histogram.
+
+Moreover, we can get the accuracy metrics of our model by running the code below. This is also shown in our previous section where we generated the `summary` of the table.  
+```r
+# Calculate accuracy metrics
+accuracy(forecasted)
+```
+We then get the following table:
+
+| Metric | Value       |
+|--------|-------------|
+| ME     | -0.00621183 |
+| RMSE   | 1.230134    |
+| MAE    | 0.9750409   |
+| MPE    | -0.2009136  |
+| MAPE   | 20.80954    |
+| MASE   | 0.4741914   |
+| ACF1   | -0.0540435  |
+
+
+Here is whet each value means:
+
+- **`ME` (Mean Error)**: -0.00621183
+  - Indicates the average bias of the residuals. A value close to 0 suggests the model is unbiased.
+
+- **`RMSE` (Root Mean Squared Error)**: 1.230134
+  - Measures the average magnitude of error. A lower value indicates a better model fit.
+
+- **`MAE` (Mean Absolute Error)**: 0.9750409
+  - Similar to RMSE but less sensitive to outliers.
+
+- **`MPE` (Mean Percentage Error)**: -0.2009136
+  - Indicates the average percentage error. Negative value shows slight underestimation.
+
+- **`MAPE` (Mean Absolute Percentage Error)**: 20.80954
+  - Indicates the average absolute percentage error. A MAPE of ~20% is considered moderate; better models typically have MAPE < 10%.
+
+- **`MASE` (Mean Absolute Scaled Error)**: 0.4741914
+  - Scales the MAE to make it comparable across datasets. A value < 1 suggests the model performs better than a naive forecast.
+
+- **`ACF1` (Autocorrelation of Residuals at Lag 1)**: -0.0540435
+  - Indicates almost no autocorrelation at lag 1, which is a good sign of well-behaved residuals.
+
+
+
+### 9. (Optional) Forecasting the temperature next 5 years (the next 60 months)
+You may also wonder that, if we can predict the temperature in the next year, can we predict the temperature for the next 5 years? The answer is YES! You can predict the temperature as furthur way as you want, however, you should bear in mind that the forecast is most accurate for the near future, with uncertainty increasing further out. You can predict the temperature of Edinburgh in the next 5 years using the following code:
+```r
+forecasted_5_years <- forecast(best_model, h = 60)
+
+# Generate yearly labels including the next 5 years
+years_5_years <- seq(2000, 2027, by = 1)  
+
+# Plot the forecast without default x-axis
+plot(forecasted_5_years, xaxt = "n", main = "Temperature Forecast for Next 5 Years", 
+     ylab = "Temperature", xlab = "Year")
+
+# Add custom x-axis labels
+axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 60, by = 12), labels = years_5_years)
+```
+And you should get a output like this:
+<center><img src="plots/forecasted_15years.png" alt="forecast 12months with true data" width="589"/></center>
+
+We can see that the forecasted values continue to exhibit clear seasonal patterns, similar to the historical data. This indicates the model has effectively captured the recurring temperature cycles. Also, there is no noticeable long-term upward or downward trend in the temperature over the forecast horizon. This suggests that the average annual temperatures are expected to remain relatively stable over the next 5 years. 
+
+> ***_NOTE:_***  The prediction intervals (shaded regions) widen as the forecast extends further into the future, reflecting increased uncertainty in the model's predictions. This is a common characteristic of time series forecasts, as predicting further into the future inherently involves more variability! Also, additional factors like climate change or unexpected events could alter these patterns and should be considered when interpreting the forecast.
+
+
 
