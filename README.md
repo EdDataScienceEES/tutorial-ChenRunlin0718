@@ -9,14 +9,53 @@ The aim of this tutorial is to provide a comprehensive and approachable guide to
 - Apply these techniques to real-world problems to understand climate trends and predict environmental changes.
 
 ## Table of Contents
-- Data - [Raw data](/data)
-- Preregistration - [Preregistration](/preregistration)
-- Scripts -  [R script](/script)
-  - challenge3_starter_script.R - [The script used](/script/challenge3_starter_script.R)
-  - draft_challenge3_script.R - [Other unused scripts](/script/draft_challenge3_script.R)
-- Report - [Context and Importance of study](/report)
-  - Report (R Markdown) - [Report](/report/Challenge3_report.md)
+- To the website - [index.html](/index.html)
+- To the MarkDown - [index.md](/index.md)
+- To the coding - [code](/test.R)
 - Plots - [Plot image outputs](/plots)
+
+# Tutorial steps
+#### 1. Introduction
+
+### Part I: Data Preparation and Exploration
+#### 2. Data Preparation
+a) Load the dataset.
+b) Clean and organise the dataset.
+
+### Part II: Analyzing Time Series and Assumptions Check
+#### 3. Visualization of data
+
+#### 4. Decomposing Time Series
+
+#### 5. Check important assumptions
+a) Stationarity Check
+b) Normality of Residual Check
+
+### Part III: Forecasting
+
+#### 6. Select an appropriate forecasting model
+
+#### 7. Generate forecasts
+a) Forecasting the temperature next year (the next 12 months)
+b) (Optional) Compare the forecasted temperature with real-world temperature
+
+#### 8. Evaluate the model's performance
+
+#### 9. (Optional) Forecasting the temperature for the next 5 years (the next 60 months)
+
+### (Optional) Part IV: Challenges
+#### 10: Analyse whether there is a long-term trend in the temperature data and assess its impact on the forecasting model
+
+## Next Steps from this tutorial
+- **Explore Advanced Models:** Now that you’re familiar with ARIMA, try exploring other advanced forecasting models such as:
+  - **Prophet:** A flexible and robust model designed for handling seasonal data with holiday effects. Check out the `prophet` package in R.
+  - **TBATS:** Useful for handling complex seasonal patterns and multiple seasonalities.
+
+- **Apply to Real-World Problems:** Use time series analysis to explore datasets from your field of interest, such as rainfall patterns, biodiversity monitoring, or energy consumption data.
+
+- **Learn Forecasting Beyond ARIMA:** Dive into machine learning techniques like Long Short-Term Memory (LSTM) networks for time series forecasting.
+
+
 
 
 ---
