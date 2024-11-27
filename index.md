@@ -39,12 +39,8 @@ b) Using statistical tests to confirm anomalies.
 8. Evaluate the model's performance.
 
 
-
-
-### (Optional) Part IV: Advanced Techniques and Challenge
-8. Advanced Topics:
-a) Multivariate time series analysis (e.g., temperature and rainfall relationships).
-b) Seasonal decomposition of environmental data using Loess (STL).
+### (Optional) Part IV: Challenge: Evaluating the Impact of Temperature Trends
+10: Analyze whether there is a long-term trend in the temperature data and assess its impact on the forecasting model.
 
 ## 1. Introduction
 Time series data are sequential data points collected over time. In environmental science, these could be measurements like temperature, rainfall, species population counts, or carbon dioxide levels. Time series analysis allows us to detect trends, seasonality, and anomalies, predict future values, and understand temporal dynamics of environmental processes. In this tutorial, you’ll learn the basics of time series analysis, including data preprocessing, visualization, decomposition, and basic forecasting techniques.
@@ -194,13 +190,14 @@ legend("topright", legend = c("Original", "Rolling Mean", "Rolling SD"), col = c
 
 Here is the plot, what can we tell from it?
 
-<center><img src="plots/Stationarity_Check.png" alt="Img" width="589"/></center>
+<center><img src="plots/Stationarity_Check.png" alt="Stationarity Check" width="589"/></center>
 
 We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. 
 
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
 Try `print(roll_mean)` and `print(roll_sd)`, why is there 5 `NA` values at the beginning and the end of them? Hint: think about why we need the `fill = NA` argument when we were computing the rolling mean and rolling standard deviaton.
 <div>
+
 
 The Answer is that: The `zoo::rollmean` function in R calculates the moving average with a specified window size k. When you specify `k = 12`, it calculates the mean over a rolling window of 12 data points. A window size of 12 means that the function requires 12 data points to calculate the first value of the moving average. For the first and last 5 points in your dataset, there aren't enough data points to form a complete window of size 12, and that is why we need to `fill = NA` argument! The `fill = NA` argument ensures that where there aren't enough data points to calculate the moving average, `NA` is inserted instead of a numeric value.
 
@@ -364,7 +361,7 @@ Despite we have examined the accuracy of our model (by comparing them with real-
 checkresiduals(best_model)
 ```
 This should be what the outcome looks like: 
-<center><img src="plots/forecasted_model_residual_plot.png" alt="Residuals plot from ARIMA(5,0,0)" width="589"/></center>
+<center><img src="plots/forecasted_model_residual_plot.png" alt="Residuals plot from ARIMA(5,0,0)" width="700"/></center>
 
 What can we tell from the plots?
 
@@ -443,5 +440,130 @@ We can see that the forecasted values continue to exhibit clear seasonal pattern
 
 > ***_NOTE:_***  The prediction intervals (shaded regions) widen as the forecast extends further into the future, reflecting increased uncertainty in the model's predictions. This is a common characteristic of time series forecasts, as predicting further into the future inherently involves more variability! Also, additional factors like climate change or unexpected events could alter these patterns and should be considered when interpreting the forecast.
 
+# _Part IV: (Optional) Challenge Problem_
+
+## Chanllenge: Evaluating the Impact of Temperature Trends
+Well done! You’ve now learned how to analyze and forecast time series data using ARIMA models and have explored model diagnostics and accuracy evaluation. In this challenge, you will apply what you’ve learned to evaluate the impact of Temperature Trends. 
+
+### Tasks: 
+Analyze whether there is a long-term trend in the temperature data and assess its impact on the forecasting model. You will:
+
+**1. Decompose the time series to identify trends.**
+
+**2. Use the decomposed trend component to adjust the original data (detrending).**
+
+**3. Refit the ARIMA model on the detrended data and compare it with the original model.**
+
+### Hints/Steps:
+**1. Use the `decompose()` function to separate the trend, seasonal, and remainder components.**
+
+**2. Subtract the trend from the original data to create a detrended dataset.**
+
+**3. Fit an ARIMA model to the detrended dataset and forecast for the next 5 years.**
+
+**4. Compare the forecasts and residual diagnostics of the detrended model with the original `ARIMA(5,0,0)` model.**
+
+#### Hint: Every function you will use are already introduced in the previous sections! This should not take longer than 20 mins!
+
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
+```r
+# Decompose the time series
+decomposed_data <- decompose(ts(temp_data$TEMPERATURE, frequency = 12))
+plot(decomposed_data)
+
+# Create a detrended dataset by subtracting the trend component
+detrended_temp <- temp_data$TEMPERATURE - decomposed_data$trend
+
+# Remove NA values caused by missing trend values at the beginning and end
+detrended_temp <- na.omit(detrended_temp)
+
+# Fit an ARIMA model on the detrended dataset
+detrended_model <- auto.arima(detrended_temp, seasonal = TRUE)
+
+# Display the summary of the detrended model
+summary(detrended_model)
+
+# Forecast for the next 5 years (60 months)
+detrended_forecast <- forecast(detrended_model, h = 60)
+
+# Plot the forecast
+plot(detrended_forecast, main = "Forecast After Detrending")
+
+# Analyze residuals
+checkresiduals(detrended_model)
+
+# Compare accuracy metrics
+detrended_accuracy <- accuracy(detrended_model)
+original_accuracy <- accuracy(best_model)
+
+# Print comparison
+cat("Detrended Model Accuracy:\n")
+print(detrended_accuracy)
+
+cat("Original Model Accuracy:\n")
+print(original_accuracy)
+
+```
+</details>
+</div>
 
 
+
+What can you tell from the plots or the accuracy metrics?  How the two models compares by looking at the metrics? 
+
+
+
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
+
+Your output should displays the accuracy metrics for the detrended model (`detrended_accuracy`) and the original ARIMA model (`original_accuracy`). Here's what the metrics indicate and how the two models compare:
+
+#### **Mean Error (ME):**
+- **Detrended Model**: 0.003972955
+- **Original Model**: -0.00621183
+- **Insight**: Both models have ME values close to 0, indicating that they are unbiased on average. However, the detrended model shows slightly less bias.
+
+#### **Root Mean Squared Error (RMSE):**
+- **Detrended Model**: 1.158204
+- **Original Model**: 1.230134
+- **Insight**: The detrended model has a lower RMSE, suggesting it performs better in terms of the magnitude of prediction errors.
+
+#### **Mean Absolute Error (MAE):**
+- **Detrended Model**: 0.8860468
+- **Original Model**: 0.9750409
+- **Insight**: The detrended model also has a lower MAE, indicating it performs better in capturing the average error magnitude without penalizing large errors as heavily as RMSE does.
+
+#### **Mean Percentage Error (MPE):**
+- **Detrended Model**: 10.2126
+- **Original Model**: -0.2009136
+- **Insight**: The detrended model has a larger MPE, suggesting it may overestimate the percentage error in its predictions.
+
+#### **Mean Absolute Percentage Error (MAPE):**
+- **Detrended Model**: 60.32654
+- **Original Model**: 20.80954
+- **Insight**: The detrended model shows a significantly higher MAPE, which might indicate issues in forecasting relative to the true values, especially for smaller magnitude data points. This could be due to the adjustments from detrending.
+
+#### **Mean Absolute Scaled Error (MASE):**
+- **Detrended Model**: 0.8007105
+- **Original Model**: 0.4741914
+- **Insight**: The detrended model has a higher MASE, suggesting that its relative scaled performance compared to a naive forecast is worse than the original model.
+
+#### **Autocorrelation of Residuals (ACF1):**
+- **Detrended Model**: 0.03004785
+- **Original Model**: -0.0540435
+- **Insight**: Both models show minimal autocorrelation in residuals, which is good. However, the original model has a slightly better ACF1 value closer to 0.
+
+</details>
+</div>
+
+
+
+Can you then tell which model is better? 
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
+- **The detrended model has lower RMSE and MAE, suggesting it better handles the magnitude of prediction errors.**
+- **The detrended model has higher MAPE and MASE values, indicating it might not perform as well relative to smaller-scale data points or a naive benchmark.**
+- **Both models exhibit minimal residual autocorrelation, meaning either is valid for forecasting.**
+</details>
+<div>

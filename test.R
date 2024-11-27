@@ -174,3 +174,42 @@ plot(forecasted_5_years, xaxt = "n", main = "Temperature Forecast for Next 5 Yea
 # Add custom x-axis labels
 axis(1, at = seq(1, length(temp_data$TEMPERATURE) + 60, by = 12), labels = years_5_years)
 dev.off()
+
+
+# (Optional) Challenge Question 
+
+decomposed_data <- decompose(ts(temp_data$TEMPERATURE, frequency = 12))
+plot(decomposed_data)
+
+# Create a detrended dataset by subtracting the trend component
+detrended_temp <- temp_data$TEMPERATURE - decomposed_data$trend
+
+# Remove NA values caused by missing trend values at the beginning and end
+detrended_temp <- na.omit(detrended_temp)
+
+# Fit an ARIMA model on the detrended dataset
+detrended_model <- auto.arima(detrended_temp, seasonal = TRUE)
+
+# Display the summary of the detrended model
+summary(detrended_model)
+
+# Forecast for the next 5 years (60 months)
+detrended_forecast <- forecast(detrended_model, h = 60)
+
+# Plot the forecast
+plot(detrended_forecast, main = "Forecast After Detrending")
+
+# Analyze residuals
+checkresiduals(detrended_model)
+
+# Compare accuracy metrics
+detrended_accuracy <- accuracy(detrended_model)
+original_accuracy <- accuracy(best_model)
+
+# Print comparison
+cat("Detrended Model Accuracy:\n")
+print(detrended_accuracy)
+
+cat("Original Model Accuracy:\n")
+print(original_accuracy)
+
