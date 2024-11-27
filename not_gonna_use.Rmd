@@ -23,22 +23,135 @@ Note that this tutorial will assume that you already have previous experience wi
 
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details> <summary>Click here for the solution!</summary>
+adasd
+</details>
+</div>
+
+
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+</div>
+
+```r
+# Decompose the time series
+decomposed_data <- decompose(ts(temp_data$TEMPERATURE, frequency = 12))
+plot(decomposed_data)
+
+# Create a detrended dataset by subtracting the trend component
+detrended_temp <- temp_data$TEMPERATURE - decomposed_data$trend
+
+# Remove NA values caused by missing trend values at the beginning and end
+detrended_temp <- na.omit(detrended_temp)
+
+# Fit an ARIMA model on the detrended dataset
+detrended_model <- auto.arima(detrended_temp, seasonal = TRUE)
+
+# Display the summary of the detrended model
+summary(detrended_model)
+
+# Forecast for the next 5 years (60 months)
+detrended_forecast <- forecast(detrended_model, h = 60)
+
+# Plot the forecast
+plot(detrended_forecast, main = "Forecast After Detrending")
+
+# Analyze residuals
+checkresiduals(detrended_model)
+
+# Compare accuracy metrics
+detrended_accuracy <- accuracy(detrended_model)
+original_accuracy <- accuracy(best_model)
+
+# Print comparison
+cat("Detrended Model Accuracy:\n")
+print(detrended_accuracy)
+
+cat("Original Model Accuracy:\n")
+print(original_accuracy)
+
+```
+</details>
+</div>
+
+
+
+
+## 10. Chanllenge: Evaluating the Impact of Temperature Trends
+Well done! You’ve now learned how to analyze and forecast time series data using ARIMA models and have explored model diagnostics and accuracy evaluation. In this challenge, you will apply what you’ve learned to evaluate the impact of Temperature Trends. 
+
+### Tasks: 
+Analyze whether there is a long-term trend in the temperature data and assess its impact on the forecasting model. You will:
+**1. Decompose the time series to identify trends.**
+
+**2. Use the decomposed trend component to adjust the original data (detrending).**
+
+**3. Refit the ARIMA model on the detrended data and compare it with the original model.**
+
+### Hints/Steps:
+**1. Use the `decompose()` function to separate the trend, seasonal, and remainder components.**
+
+**2. Subtract the trend from the original data to create a detrended dataset.**
+
+**3. Fit an ARIMA model to the detrended dataset and forecast for the next 5 years.**
+
+**4. Compare the forecasts and residual diagnostics of the detrended model with the original `ARIMA(5,0,0)` model.**
+
+
+
+Hint: Every function you will use are already introduced in the previous sections! This should not take longer than 20 mins!
+
+What can you tell from the plots or the accuracy metrics?  How the two models compares by looking at the metrics? 
+
+
+
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
+
+Your output should displays the accuracy metrics for the detrended model (`detrended_accuracy`) and the original ARIMA model (`original_accuracy`). Here are what the metrics indicate and how the two models compare:
+
+#### **Mean Error (ME):**
+- **Detrended Model**: 0.003972955
+- **Original Model**: -0.00621183
+- **Insight**: Both models have ME values close to 0, indicating that they are unbiased on average. However, the detrended model shows slightly less bias.
+
+#### **Root Mean Squared Error (RMSE):**
+- **Detrended Model**: 1.158204
+- **Original Model**: 1.230134
+- **Insight**: The detrended model has a lower RMSE, suggesting it performs better in terms of the magnitude of prediction errors.
+
+#### **Mean Absolute Error (MAE):**
+- **Detrended Model**: 0.8860468
+- **Original Model**: 0.9750409
+- **Insight**: The detrended model also has a lower MAE, indicating it performs better in capturing the average error magnitude without penalizing large errors as heavily as RMSE does.
+
+#### **Mean Percentage Error (MPE):**
+- **Detrended Model**: 10.2126
+- **Original Model**: -0.2009136
+- **Insight**: The detrended model has a larger MPE, suggesting it may overestimate the percentage error in its predictions.
+
+#### **Mean Absolute Percentage Error (MAPE):**
+- **Detrended Model**: 60.32654
+- **Original Model**: 20.80954
+- **Insight**: The detrended model shows a significantly higher MAPE, which might indicate issues in forecasting relative to the true values, especially for smaller magnitude data points. This could be due to the adjustments from detrending.
+
+#### **Mean Absolute Scaled Error (MASE):**
+- **Detrended Model**: 0.8007105
+- **Original Model**: 0.4741914
+- **Insight**: The detrended model has a higher MASE, suggesting that its relative scaled performance compared to a naive forecast is worse than the original model.
+
+#### **Autocorrelation of Residuals (ACF1):**
+- **Detrended Model**: 0.03004785
+- **Original Model**: -0.0540435
+- **Insight**: Both models show minimal autocorrelation in residuals, which is good. However, the original model has a slightly better ACF1 value closer to 0.
 
 </details>
+</div>
+
+
+Can you then tell which model is better? 
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
+- **The detrended model has lower RMSE and MAE, suggesting it better handles the magnitude of prediction errors.**
+- **The detrended model has higher MAPE and MASE values, indicating it might not perform as well relative to smaller-scale data points or a naive benchmark.**
+- **Both models exhibit minimal residual autocorrelation, meaning either is valid for forecasting.**
+</details>
 <div>
-
-
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

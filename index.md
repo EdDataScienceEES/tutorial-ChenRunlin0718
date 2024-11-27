@@ -470,8 +470,6 @@ Here is whet each value means:
 - **`ACF1` (Autocorrelation of Residuals at Lag 1)**: -0.0540435
   - Indicates almost no autocorrelation at lag 1, which is a good sign of well-behaved residuals.
 
-
-
 ## 9. (Optional) Forecasting the temperature next 5 years (the next 60 months)
 You may also wonder that, if we can predict the temperature in the next year, can we predict the temperature for the next 5 years? The answer is YES! You can predict the temperature as further away as you want, however, you should bear in mind that the forecast is most accurate for the near future, with uncertainty increasing further out. You can predict the temperature of Edinburgh in the next 5 years using the following code:
 ```r
@@ -494,6 +492,7 @@ We can see that the forecasted values continue to exhibit clear seasonal pattern
 
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
 > ***_NOTE:_***  The prediction intervals (shaded regions) widen as the forecast extends further into the future, reflecting increased uncertainty in the model's predictions. This is a common characteristic of time series forecasts, as predicting further into the future inherently involves more variability! Also, additional factors like climate change or unexpected events could alter these patterns and should be considered when interpreting the forecast.
+
 </div>
 
 # _Part IV: (Optional) Challenge Problem_
