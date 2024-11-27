@@ -659,18 +659,16 @@ suggesting anomalies or unusual events that deviate from the expected
 trend and seasonality of the dataset. These could be due to irregular
 climatic events such as heatwaves, cold snaps, or measurement
 errors.</p>
-<p>In general, the trend component offers insights into long-term
-climatic changes, useful for climate modeling and environmental studies.
-Further more, the decomposition shows strong seasonality, which can be
+<p>In general, the decomposition shows strong seasonality, which can be
 leveraged for accurate seasonal forecasting later.</p>
 </div>
 <div id="check-important-assumptions-1" class="section level2">
 <h2>5. Check important assumptions</h2>
 <p>There are some important assumptions to check before going to
 forecasting (eg, Stationarity, autocorrelation and Independence of
-Residuals…). In this tutorial, our main focus will be on the forecasting
-so we would not spend much time checking through all the assumptions.
-Here, we will only check two of the main assumptions:
+Residuals…). In this tutorial, our main focus will be on forecasting so
+we would not spend much time checking through all the assumptions. Here,
+we will only check two of the main assumptions:
 <strong>Stationarity</strong> and <strong>Normality of
 Residuals</strong> to show you how things work!</p>
 <blockquote>
@@ -715,7 +713,7 @@ our dataset is mostly stable but may still have non-stationary
 components, likely because of the seasonal patterns of the data.</p>
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
 <p>Try <code>print(roll_mean)</code> and <code>print(roll_sd)</code>,
-why is there 5 <code>NA</code> values at the beginning and the end of
+why are there 5 <code>NA</code> values at the beginning and the end of
 them? Hint: think about why we need the <code>fill = NA</code> argument
 when we were computing the rolling mean and rolling standard
 deviaton.</p>
@@ -921,8 +919,8 @@ to this <a href="https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_
 </div>
 </div>
 </div>
-<div id="generate-forecasts-for-future-time" class="section level2">
-<h2>7. Generate forecasts for future time</h2>
+<div id="generate-forecasts-1" class="section level2">
+<h2>7. Generate forecasts</h2>
 <div id="a.-forecasting-the-temperature-next-year-the-next-12-months" class="section level3">
 <h3>(a). Forecasting the temperature next year (the next 12 months)</h3>
 <p>Now that we have our <code>ARIMA</code> model and we have ideas of
@@ -1142,7 +1140,7 @@ of well-behaved residuals.</li>
 months)</h2>
 <p>You may also wonder that, if we can predict the temperature in the
 next year, can we predict the temperature for the next 5 years? The
-answer is YES! You can predict the temperature as furthur way as you
+answer is YES! You can predict the temperature as further away as you
 want, however, you should bear in mind that the forecast is most
 accurate for the near future, with uncertainty increasing further out.
 You can predict the temperature of Edinburgh in the next 5 years using
@@ -1400,8 +1398,19 @@ rainfall patterns, biodiversity monitoring, or energy consumption
 data.</p></li>
 <li><p><strong>Learn Forecasting Beyond ARIMA:</strong> Dive into
 machine learning techniques like Long Short-Term Memory (LSTM) networks
-for time series forecasting using Python or R.</p></li>
+for time series forecasting.</p></li>
 </ul>
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+<p><strong>Related tutorials</strong></p>
+<ul>
+<li><p><a href="https://ourcodingclub.github.io/tutorials/etiquette/">Coding
+etiquette</a></p></li>
+<li><p><a href="https://ourcodingclub.github.io/tutorials/time/">Analysing Time
+Series Data</a></p></li>
+<li><p><a href="https://ourcodingclub.github.io/tutorials/data-scaling/">Transforming
+and scaling data</a></p></li>
+</ul>
+</div>
 <p>I hope you have enjoyed working on this tutorial and wish it can be
 some of help for your future study or career!</p>
 </div>

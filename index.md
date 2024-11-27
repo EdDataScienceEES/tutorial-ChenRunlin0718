@@ -638,4 +638,15 @@ In this tutorial, you’ve taken a deep dive into time series analysis and forec
 
 - **Learn Forecasting Beyond ARIMA:** Dive into machine learning techniques like Long Short-Term Memory (LSTM) networks for time series forecasting.
 
+
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+**Related tutorials**
+
+- [Coding etiquette](https://ourcodingclub.github.io/tutorials/etiquette/)
+
+- [Analysing Time Series Data](https://ourcodingclub.github.io/tutorials/time/)
+
+- [Transforming and scaling data](https://ourcodingclub.github.io/tutorials/data-scaling/)
+</div>
+
 I hope you have enjoyed working on this tutorial and wish it can be some of help for your future study or career! 
