@@ -13,7 +13,7 @@
 
 <meta name="date" content="2024-11-21" />
 
-<title>Tutorial: Introduction to time Series Analysis for Environmental Data</title>
+<title>Introduction to time Series Analysis using Temperature Data</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,8 +350,8 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Tutorial: Introduction to time Series
-Analysis for Environmental Data</h1>
+<h1 class="title toc-ignore">Introduction to time Series Analysis using
+Temperature Data</h1>
 <h4 class="author">Runlin Chen</h4>
 <h4 class="date">2024-11-21</h4>
 
@@ -360,88 +360,110 @@ Analysis for Environmental Data</h1>
 
 <div id="tutorial-aims" class="section level1">
 <h1>Tutorial aims</h1>
-<ol style="list-style-type: decimal">
-<li>Understand the fundamentals of time series analysis and its
-applications in environmental data.</li>
-<li>Learn how to preprocess, visualize, and decompose time series
-dataset for meaningful insights.</li>
-<li>Gain hands-on experience with forecasting techniques to predict
-trends in environmental data.</li>
-<li>Develop skills in using R and relevant packages for analyzing time
-series data effectively.</li>
-</ol>
+<p>The aim of this tutorial is to provide a comprehensive and
+approachable guide to time series analysis and forecasting using
+temperature data in Edinburgh. This tutorial is designed for advanced
+undergraduate or early graduate students in Environmental or Ecological
+Sciences who are looking to enhance their data science skills. By the
+end of this tutorial, learners will:</p>
+<ul>
+<li>Understand the fundamental concepts of time series analysis,
+including decomposition, stationarity, and autocorrelation.</li>
+<li>Gain hands-on experience in using R to preprocess, analyse, and
+forecast time series data.</li>
+<li>Learn how to assess and improve model performance and interpret
+forecasting results effectively.</li>
+<li>Apply these techniques to real-world problems to understand climate
+trends and predict environmental changes.</li>
+</ul>
+<hr />
 </div>
 <div id="tutorial-steps" class="section level1">
 <h1>Tutorial steps</h1>
-<div id="introduction." class="section level4">
-<h4>1. Introduction.</h4>
+<div id="introduction" class="section level4">
+<h4>1. Introduction</h4>
 </div>
 <div id="part-i-data-preparation-and-exploration" class="section level3">
 <h3>Part I: Data Preparation and Exploration</h3>
-<div id="data-wrangling" class="section level4">
-<h4>2. Data wrangling:</h4>
+<div id="data-preparation" class="section level4">
+<h4>2. Data Preparation</h4>
 <ol style="list-style-type: lower-alpha">
-<li>Load the relevant libraries and the dataset.</li>
-<li>Clean and organize the dataset</li>
+<li>Load the dataset.</li>
+<li>Clean and organise the dataset.</li>
 </ol>
 </div>
 </div>
-<div id="part-ii-analyzing-time-series" class="section level3">
-<h3>Part II: Analyzing Time Series</h3>
+<div id="part-ii-analyzing-time-series-and-assumptions-check" class="section level3">
+<h3>Part II: Analyzing Time Series and Assumptions Check</h3>
+<div id="visualization-of-data" class="section level4">
+<h4>3. Visualization of data</h4>
+</div>
 <div id="decomposing-time-series" class="section level4">
-<h4>4. Decomposing Time Series:</h4>
+<h4>4. Decomposing Time Series</h4>
+</div>
+<div id="check-important-assumptions" class="section level4">
+<h4>5. Check important assumptions</h4>
 <ol style="list-style-type: lower-alpha">
-<li>Splitting time series into trend, seasonal, and residual components
-with <em>decompose</em>.</li>
-<li>Interpreting decomposed components in environmental contexts.</li>
-</ol>
-<ol start="5" style="list-style-type: decimal">
-<li>Detecting Anomalies:</li>
-</ol>
-<ol style="list-style-type: lower-alpha">
-<li>Identifying outliers and spikes using visualization techniques.</li>
-<li>Using statistical tests to confirm anomalies.</li>
+<li>Stationarity Check</li>
+<li>Normality of Residual Check</li>
 </ol>
 </div>
 </div>
 <div id="part-iii-forecasting" class="section level3">
 <h3>Part III: Forecasting</h3>
-<ol start="6" style="list-style-type: decimal">
-<li><p>Select an appropriate forecasting model.</p></li>
-<li><p>Generate forecasts for future time points.</p></li>
-<li><p>Evaluate the model’s performance.</p></li>
+<div id="select-an-appropriate-forecasting-model" class="section level4">
+<h4>6. Select an appropriate forecasting model</h4>
+</div>
+<div id="generate-forecasts" class="section level4">
+<h4>7. Generate forecasts</h4>
+<ol style="list-style-type: lower-alpha">
+<li>Forecasting the temperature next year (the next 12 months)</li>
+<li>(Optional) Compare the forecasted temperature with real-world
+temperature</li>
 </ol>
 </div>
-<div id="optional-part-iv-challenge-evaluating-the-impact-of-temperature-trends" class="section level3">
-<h3>(Optional) Part IV: Challenge: Evaluating the Impact of Temperature
-Trends</h3>
-<p>10: Analyze whether there is a long-term trend in the temperature
-data and assess its impact on the forecasting model.</p>
+<div id="evaluate-the-models-performance" class="section level4">
+<h4>8. Evaluate the model’s performance</h4>
 </div>
-<div id="introduction" class="section level2">
+<div id="optional-forecasting-the-temperature-for-the-next-5-years-the-next-60-months" class="section level4">
+<h4>9. (Optional) Forecasting the temperature for the next 5 years (the
+next 60 months)</h4>
+</div>
+</div>
+<div id="optional-part-iv-challenges" class="section level3">
+<h3>(Optional) Part IV: Challenges</h3>
+<div id="analyse-whether-there-is-a-long-term-trend-in-the-temperature-data-and-assess-its-impact-on-the-forecasting-model" class="section level4">
+<h4>10: Analyse whether there is a long-term trend in the temperature
+data and assess its impact on the forecasting model</h4>
+<hr />
+</div>
+</div>
+<div id="introduction-1" class="section level2">
 <h2>1. Introduction</h2>
-<p>Time series data are sequential data points collected over time. In
-environmental science, these could be measurements like temperature,
-rainfall, species population counts, or carbon dioxide levels. Time
-series analysis allows us to detect trends, seasonality, and anomalies,
-predict future values, and understand temporal dynamics of environmental
-processes. In this tutorial, you’ll learn the basics of time series
-analysis, including data preprocessing, visualization, decomposition,
-and basic forecasting techniques.</p>
-<p>In part 1, we will be working with a dataset from <em>NASA</em> that
-captures the temperature of earth and try to do some data wrangling with
-it to make it easier for later analysis. In part 2, we will look into
-some basic and fundamental techniques that can be used to deal with time
-series data. In part 3, things are going to get interesting because we
-are going to build a forecasting Models that is able to predict the
-temperature in the future.</p>
+<p>Time series data is ubiquitous in environmental and ecological
+sciences, from monitoring weather patterns to analyzing biodiversity
+trends. This tutorial focuses on the monthly average temperatures in
+Edinburgh from 2000 to 2022, offering a real-world application of time
+series analysis. With increasing awareness of climate change and its
+impact on ecosystems, analysing temperature trends can provide critical
+insights for researchers, policymakers, and urban planners.</p>
+<p>This tutorial will take you step-by-step through the process of time
+series analysis, starting with data preprocessing and exploration,
+followed by decomposition and statistical analysis, and concluding with
+forecasting future trends using ARIMA models. Along the way, we will
+discuss key assumptions, model diagnostics, and evaluation metrics to
+ensure robust analysis.</p>
+<p>Whether you are new to time series analysis or seeking to deepen your
+expertise, this tutorial provides a practical foundation in handling
+real-world environmental data using R. Let’s get started on exploring
+the story hidden within the temperature data of Edinburgh!</p>
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
 <blockquote>
 <p><strong><em><em>NOTE:</em></em></strong> Note that this tutorial will
 assume that you already have previous experience with R and familiar
-with basic operations of R such as <em>%&gt;%</em> and
-<em>summarise()</em>. If not, Coding Club has got you covered: check out
-the <a href="https://ourcodingclub.github.io/tutorials/intro-to-r/">Intro to R
+with basic operations of R such as <code>%&gt;%</code> and
+<code>summarise()</code>. If not, Coding Club has got you covered: check
+out the <a href="https://ourcodingclub.github.io/tutorials/intro-to-r/">Intro to R
 tutorial</a>!</p>
 </blockquote>
 </div>
@@ -449,10 +471,10 @@ tutorial</a>!</p>
 </div>
 <div id="part-i-data-preparation-and-exploration-1" class="section level1">
 <h1><em>Part I: Data Preparation and Exploration</em></h1>
-<div id="data-wrangling-1" class="section level2">
+<div id="data-wrangling" class="section level2">
 <h2>2. Data Wrangling</h2>
 <div id="a-load-the-dataset" class="section level3">
-<h3>a) Load the dataset</h3>
+<h3>(a) Load the dataset</h3>
 <p>In this tutorial, we will use a dataset obtained from the
 <strong>NASA POWER API</strong>, a tool that provides climate data from
 NASA’s Prediction of Worldwide Energy Resource (POWER) project.
@@ -469,7 +491,7 @@ library(dplyr)
 library(nasapower)
 library(lubridate)</code></pre>
 <p>Now let’s load the dataset and name it <code>temp_data</code>. Note
-that we want the location to be Edinburgh so we need to enter
+that we want the location to be Edinburgh so, we need to enter
 Edinburgh’s coordinate of location.</p>
 <pre class="r"><code>temp_data &lt;- get_power(
   community = &quot;AG&quot;,
@@ -479,8 +501,8 @@ Edinburgh’s coordinate of location.</p>
   dates = c(&quot;2000&quot;, &quot;2022&quot;)
 )</code></pre>
 </div>
-<div id="b-clean-and-organize-the-dataset" class="section level3">
-<h3>b) Clean and organize the dataset</h3>
+<div id="b-clean-and-organise-the-dataset" class="section level3">
+<h3>(b) Clean and organise the dataset</h3>
 <p>Now we have the dataset, but is it in a ideal form for doing time
 series analysis? An ideal dataset for time series analysis has specific
 characteristics that make it well-suited for extracting meaningful
@@ -500,10 +522,13 @@ allows for better detection of trends, seasonality, and rare events
 <p><strong>- Clear labels for time periods:</strong> Properly labeled
 time points make it easier to interpret results and ensure that models
 process the data correctly.</p>
-<p>These are some basic characteristics of a dataset that is ideal for
+<p>These are some basic characteristics of a dataset that are ideal for
 doing timer series analysis. Without these characteristics, the quality
-and reliability of the analysis may suffer. More constraints may apply
-to the dataset depends on the aims of analysis.</p>
+and reliability of the analysis may suffer.</p>
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+<p>Note that more requirements may apply to the dataset, depending on
+the aims of analysis.</p>
+</div>
 <p>Now let’s check what our dataset looks like by running
 <code>head(temp_data)</code>. We can see that the dataset is in a wide
 format, with months as separate columns. This structure is not ideal for
@@ -512,10 +537,22 @@ date column. Also, we do not need columns such as <code>LON</code>,
 <code>LAT</code>, and <code>PARAMETER</code> are repeated and not
 provide valuable information. Moreover, the column names for months
 (JAN, FEB, etc.) use abbreviations, which need to be converted into
-numbers or used to generate a proper date. These can be done using the
-following code:</p>
-<pre class="r"><code># Step 1: Reshape from wide to long format
-# Clean the dataset
+numbers or used to generate a proper date.</p>
+<p>Based on these information and the characteristics, clean and make
+the dataset as what we wanted in the following code chunk! Consider this
+as a warm-up!</p>
+<pre class="r"><code># Write your code here (or somewhere else)!
+
+
+</code></pre>
+<p>If you are ready, check the solution by clicking the button
+below!</p>
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details>
+<summary>
+Click here for the solution!
+</summary>
+<pre class="r"><code># Clean the dataset
 temp_data &lt;- temp_data %&gt;%
   # Reshape from wide to long format
   pivot_longer(
@@ -530,8 +567,9 @@ temp_data &lt;- temp_data %&gt;%
   ) %&gt;%
   mutate(YEAR_MONTH = ym(YEAR_MONTH)) %&gt;% # Convert &quot;YEAR-MONTH&quot; to date
   # Select only the relevant columns for time series analysis
-  select(YEAR_MONTH, TEMPERATURE)
-  </code></pre>
+  select(YEAR_MONTH, TEMPERATURE)</code></pre>
+</details>
+</div>
 <p>Run the <code>head(temp_data)</code> again and see what it looks like
 now. Now it is in long format and has only two columns:
 <code>YEAR_MONTH</code> and <code>TEMPERATURE</code>. This is a fairly
@@ -545,10 +583,10 @@ good to go!</p>
 </div>
 </div>
 </div>
-<div id="part-ii-analyzing-time-series-1" class="section level1">
+<div id="part-ii-analyzing-time-series" class="section level1">
 <h1><em>Part II: Analyzing Time Series</em></h1>
-<div id="visualization-of-data" class="section level3">
-<h3>3. Visualization of data</h3>
+<div id="visualization-of-data-1" class="section level2">
+<h2>3. Visualization of data</h2>
 <p>We can start by displaying the temperature trends over time and see
 what the plot looks like. We can simply use the <code>ggplot()</code> to
 do this for us:</p>
@@ -571,33 +609,38 @@ appear to be a significant long-term upward or downward trend,
 suggesting relative stability in Edinburgh’s average temperature from
 2000 to the end of 2020.</p>
 </div>
-<div id="decomposing-time-series-1" class="section level3">
-<h3>4. Decomposing Time Series:</h3>
+<div id="decomposing-time-series-1" class="section level2">
+<h2>4. Decomposing Time Series:</h2>
 <p>The previous plot provides an overview of the temperature trends over
 time, showing clear seasonal fluctuations and variations. However, to
 better understand the underlying components—such as the overall trend,
 recurring seasonal patterns and random fluctuations, we can decompose
 the time series. Decomposition helps us isolate these components,
 enabling a more detailed analysis of the data. Using the
-<code>forecast</code> library, we can use the <code>objects</code> and
-<code>stl()</code> function, we can decompose our dataset:</p>
+<code>stl()</code> function from the <code>forecast</code> library, we
+can decompose our dataset:</p>
 <pre class="r"><code>ts_data &lt;- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
 
 # Apply STL decomposition (Seasonal and Trend decomposition)
 decomposed_stl &lt;- stl(ts_data, s.window = &quot;periodic&quot;)
 plot(decomposed_stl, main = &quot;STL Decomposition of the Data&quot;)</code></pre>
-<p>The <code>ts</code> function converts our temperature data into a
-time series object and the <code>stl</code> function performs seasonal
-and trend decomposition (note that here we use
+<div style="background-color: #d9edf7;; padding: 10px; border-radius: 5px;">
+The <code>ts</code> function converts our temperature data into a time
+series object and the <code>stl</code> function performs seasonal and
+trend decomposition (note that here we use
 <code>s.window = &quot;periodic&quot;</code> to assume a fixed seasonal pattern in
-the dataset). Run this chunk of code and we will get the plot below:</p>
+the dataset).
+</details>
+</div>
+<p>Run the code and we will get the plot below:</p>
 <center>
 <img src="data:image/png;base64,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" alt="STL Decomposition Plo" width="589" />
 </center>
-<p>There dataset is decomposed into the following four panels: <strong>-
-Data (Observed Time Series):</strong> The top panel represents the
-original temperature data, which shows both seasonal patterns and an
-underlying trend. This is just what we have in Figure 1.</p>
+<p>There dataset is decomposed into the following four panels:</p>
+<p><strong>- Data (Observed Time Series):</strong> The top panel
+represents the original temperature data, which shows both seasonal
+patterns and an underlying trend. This is just what we have in the plot
+<code>Temperature Trends Over Time</code>.</p>
 <p><strong>- Seasonal Component:</strong> The second panel highlights
 the seasonal component, which is consistent across the years. The
 periodic fluctuations indicate clear seasonality in the dataset, with
@@ -621,8 +664,8 @@ climatic changes, useful for climate modeling and environmental studies.
 Further more, the decomposition shows strong seasonality, which can be
 leveraged for accurate seasonal forecasting later.</p>
 </div>
-<div id="check-important-assumptions" class="section level3">
-<h3>5. Check important assumptions</h3>
+<div id="check-important-assumptions-1" class="section level2">
+<h2>5. Check important assumptions</h2>
 <p>There are some important assumptions to check before going to
 forecasting (eg, Stationarity, autocorrelation and Independence of
 Residuals…). In this tutorial, our main focus will be on the forecasting
@@ -636,8 +679,8 @@ what each assumption is and how to check them using R, please refer to
 this amazing <a href="https://www.youtube.com/watch?v=eTZ4VUZHzxw&amp;t=204s">Youtube
 video</a>!</p>
 </blockquote>
-<div id="a-stationarity-check" class="section level4">
-<h4>(a) Stationarity Check</h4>
+<div id="a-stationarity-check" class="section level3">
+<h3>(a) Stationarity Check</h3>
 <p>Before we move to part III: Data forecasting, it is important to
 perform stationary check to our dataset. Stationarity is a fundamental
 assumption for many time series forecasting methods. A stationary series
@@ -652,7 +695,7 @@ standard deviation from the <code>zoo</code> library.</p>
 <pre class="r"><code># Compute rolling mean and standard deviation
 roll_mean &lt;- zoo::rollmean(temp_data$TEMPERATURE, k = 12, fill = NA)
 roll_sd &lt;- zoo::rollapply(temp_data$TEMPERATURE, width = 12, FUN = sd, fill = NA)</code></pre>
-<p>Then we can visualize it to see if they change over time by running
+<p>Then we can visualise it to see if they change over time by running
 the following code:</p>
 <pre class="r"><code>plot(temp_data$TEMPERATURE, type = &quot;l&quot;, col = &quot;blue&quot;, ylab = &quot;Temperature&quot;, xlab = &quot;Number of Month from 2000&quot;)
 lines(roll_mean, col = &quot;red&quot;, lty = 2)  # Rolling mean
@@ -671,14 +714,18 @@ rolling standard deviations are all generally constant. This suggests
 our dataset is mostly stable but may still have non-stationary
 components, likely because of the seasonal patterns of the data.</p>
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
-Try <code>print(roll_mean)</code> and <code>print(roll_sd)</code>, why
-is there 5 <code>NA</code> values at the beginning and the end of them?
-Hint: think about why we need the <code>fill = NA</code> argument when
-we were computing the rolling mean and rolling standard deviaton.
-<div>
-
-
-<p>The Answer is that: The <code>zoo::rollmean</code> function in R
+<p>Try <code>print(roll_mean)</code> and <code>print(roll_sd)</code>,
+why is there 5 <code>NA</code> values at the beginning and the end of
+them? Hint: think about why we need the <code>fill = NA</code> argument
+when we were computing the rolling mean and rolling standard
+deviaton.</p>
+</div>
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details>
+<summary>
+Click here for the solution!
+</summary>
+The Answer is that: The <code>zoo::rollmean</code> function in R
 calculates the moving average with a specified window size k. When you
 specify <code>k = 12</code>, it calculates the mean over a rolling
 window of 12 data points. A window size of 12 means that the function
@@ -688,7 +735,8 @@ enough data points to form a complete window of size 12, and that is why
 we need to <code>fill = NA</code> argument! The <code>fill = NA</code>
 argument ensures that where there aren’t enough data points to calculate
 the moving average, <code>NA</code> is inserted instead of a numeric
-value.</p>
+value.
+</details>
 </div>
 </div>
 <div id="another-rather-formal-way-to-check-stationarity" class="section level3">
@@ -707,9 +755,10 @@ statistic (as in this case) strongly indicates that the null hypothesis
 can be rejected. The null hypothesis assumes that this time series is
 non-stationary (it has a unit root). Since the p-value is very small
 (smaller than common significance levels 0.5), we can reject the null
-hypothesis that is time series it not stable.</p>
-<div id="b-normality-of-residual-check" class="section level4">
-<h4>(b) Normality of Residual Check</h4>
+hypothesis that the time series it not stable.</p>
+</div>
+<div id="b-normality-of-residual-check" class="section level3">
+<h3>(b) Normality of Residual Check</h3>
 <p>Another important assumption to check is the Normality of Residual.
 Two easy ways to check this is through a histogram of residuals and a
 Q-Q plot, which can be done easily by the following code:</p>
@@ -733,15 +782,15 @@ distribution. We are good to move to the forecasting now!</p>
 </div>
 <div id="part-iii-forecasting-1" class="section level1">
 <h1><em>Part III: Forecasting</em></h1>
-<p>Now that we’ve prepared and analyzed our time series data, it’s time
+<p>Now that we’ve prepared and analysed our time series data, it’s time
 to build a forecasting model and generate future predictions! In this
 section, we will:</p>
 <p><strong>- Select an appropriate forecasting model.</strong></p>
 <p><strong>- Generate forecasts for future time points.</strong></p>
 <p><strong>- Evaluate the model’s performance.</strong></p>
-<p><strong>- Visualize and interpret the forecast results.</strong></p>
-<div id="select-an-appropriate-forecasting-model." class="section level3">
-<h3>6. Select an appropriate forecasting model.</h3>
+<p><strong>- Visualise and interpret the forecast results.</strong></p>
+<div id="select-an-appropriate-forecasting-model." class="section level2">
+<h2>6. Select an appropriate forecasting model.</h2>
 <p>The first step in forecasting is selecting the right model. For this
 tutorial, we’ll use the ARIMA (Auto-Regressive Integrated Moving
 Average) model, as it is versatile and works well for time series data
@@ -756,8 +805,51 @@ selected model’s details, including its parameters and diagnostic
 information.</p>
 <pre class="r"><code># Display the model summary
 summary(best_model)</code></pre>
+<p>We will get a title <code>ARIMA(5,0,0)</code> and a summary table
+containing the following information:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Coefficient</th>
+<th>SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ar1</td>
+<td>0.7249</td>
+<td>0.0583</td>
+</tr>
+<tr class="even">
+<td>ar2</td>
+<td>-0.0231</td>
+<td>0.0714</td>
+</tr>
+<tr class="odd">
+<td>ar3</td>
+<td>0.0160</td>
+<td>0.0713</td>
+</tr>
+<tr class="even">
+<td>ar4</td>
+<td>-0.2594</td>
+<td>0.0717</td>
+</tr>
+<tr class="odd">
+<td>ar5</td>
+<td>-0.2537</td>
+<td>0.0586</td>
+</tr>
+<tr class="even">
+<td>mean</td>
+<td>8.4191</td>
+<td>0.0938</td>
+</tr>
+</tbody>
+</table>
 <p>If you have never used ARIMA model before, this table may looks
-confusing to you. Let’s break it down!</p>
+confusing to you. Let’s break it down:</p>
 <div id="a.-arima500" class="section level4">
 <h4>(a). <code>ARIMA(5,0,0)</code>:</h4>
 <ul>
@@ -783,8 +875,11 @@ in the model.</li>
 (<strong>ar1</strong> to <strong>ar5</strong>) and the overall
 <strong>mean</strong>:
 <ul>
-<li><strong><code>ar1 = 0.7249</code></strong>: Indicates a strong
-positive relationship between the current value and the first lag.</li>
+<li><strong><code>ar1 = 0.7249</code></strong>: The coefficient for the
+first lag. It represents the influence of the immediate previous value
+of the time series on the current value. Here, ar1 = 0.7249, meaning
+there is a strong positive correlation between the current value and the
+value from one step ago.</li>
 <li><strong><code>ar2 = -0.0231</code></strong>: Shows a very weak
 negative relationship between the current value and the second lag.</li>
 <li><strong><code>ar3, ar4, ar5</code></strong>: These terms show
@@ -815,18 +910,19 @@ normally indicate a better model because it suggests a good balance
 between model accuracy and simplicity.</p></li>
 <li><p><strong><code>BIC</code> (Bayesian Information Criterion) =
 941.66</strong>: Similar to AIC, BIC also balances model fit and
-complexity but penalizes complexity more heavily than AIC.</p>
-<ul>
-<li>These are measures of model fit, where lower values indicate a
-better model. We can compare these values with other models to select
-the best one if necessary.</li>
-</ul></li>
+complexity but penalises complexity more heavily than AIC.</p></li>
 </ul>
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+<p>The purpose of this tutorial is more about how to use
+<code>ARIMA</code> model in time series analysis, so we would not go
+into details of how to calculate each value or how the model is created.
+If you want to dig into how the <code>ARIMA</code> model, please refer
+to this <a href="https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average#Examples">website</a>.</p>
 </div>
 </div>
-<div id="generate-forecasts-for-future-time-points." class="section level3">
-<h3>7. Generate forecasts for future time points.</h3>
 </div>
+<div id="generate-forecasts-for-future-time" class="section level2">
+<h2>7. Generate forecasts for future time</h2>
 <div id="a.-forecasting-the-temperature-next-year-the-next-12-months" class="section level3">
 <h3>(a). Forecasting the temperature next year (the next 12 months)</h3>
 <p>Now that we have our <code>ARIMA</code> model and we have ideas of
@@ -906,8 +1002,9 @@ fits the real-life temperatures very well! The real-world data (red
 line) sits in the the confidence interval (shaded area) and basically
 overlap with our predictions.</p>
 </div>
-<div id="evaluate-the-models-performance." class="section level3">
-<h3>8. Evaluate the model’s performance.</h3>
+</div>
+<div id="evaluate-the-models-performance." class="section level2">
+<h2>8. Evaluate the model’s performance.</h2>
 <p>Now let’s go back to our first prediction model where we predict the
 temperature for only the next year. Remember that we generated our model
 using the following code:</p>
@@ -1040,9 +1137,9 @@ of well-behaved residuals.</li>
 </ul>
 </div>
 </div>
-<div id="optional-forecasting-the-temperature-next-5-years-the-next-60-months" class="section level3">
-<h3>9. (Optional) Forecasting the temperature next 5 years (the next 60
-months)</h3>
+<div id="optional-forecasting-the-temperature-next-5-years-the-next-60-months" class="section level2">
+<h2>9. (Optional) Forecasting the temperature next 5 years (the next 60
+months)</h2>
 <p>You may also wonder that, if we can predict the temperature in the
 next year, can we predict the temperature for the next 5 years? The
 answer is YES! You can predict the temperature as furthur way as you
@@ -1072,6 +1169,7 @@ there is no noticeable long-term upward or downward trend in the
 temperature over the forecast horizon. This suggests that the average
 annual temperatures are expected to remain relatively stable over the
 next 5 years.</p>
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
 <blockquote>
 <p><strong><em><em>NOTE:</em></em></strong> The prediction intervals
 (shaded regions) widen as the forecast extends further into the future,
@@ -1083,38 +1181,33 @@ patterns and should be considered when interpreting the forecast.</p>
 </blockquote>
 </div>
 </div>
+</div>
 <div id="part-iv-optional-challenge-problem" class="section level1">
 <h1><em>Part IV: (Optional) Challenge Problem</em></h1>
 <div id="chanllenge-evaluating-the-impact-of-temperature-trends" class="section level2">
-<h2>Chanllenge: Evaluating the Impact of Temperature Trends</h2>
-<p>Well done! You’ve now learned how to analyze and forecast time series
+<h2>10. Chanllenge: Evaluating the Impact of Temperature Trends</h2>
+<p>Well done! You’ve now learned how to analyse and forecast time series
 data using ARIMA models and have explored model diagnostics and accuracy
 evaluation. In this challenge, you will apply what you’ve learned to
 evaluate the impact of Temperature Trends.</p>
-<div id="tasks" class="section level3">
-<h3>Tasks:</h3>
-<p>Analyze whether there is a long-term trend in the temperature data
-and assess its impact on the forecasting model. You will:</p>
-<p><strong>1. Decompose the time series to identify trends.</strong></p>
-<p><strong>2. Use the decomposed trend component to adjust the original
-data (detrending).</strong></p>
-<p><strong>3. Refit the ARIMA model on the detrended data and compare it
-with the original model.</strong></p>
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+<p>Hint: Every function you will use are already introduced in the
+previous sections! This should not take longer than 20 mins!</p>
 </div>
-<div id="hintssteps" class="section level3">
-<h3>Hints/Steps:</h3>
+<div id="challenge-1-decompose-the-time-series-and-refit-the-arima-model-on-the-detrended-data" class="section level3">
+<h3>Challenge 1: Decompose the time series and refit the ARIMA model on
+the detrended data</h3>
+<p>Build a new model using by substracting the trend from the original
+data, and name it <code>decomposed_data</code>.</p>
+<div id="hintssteps" class="section level4" style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+<h4>Hints/Steps:</h4>
 <p><strong>1. Use the <code>decompose()</code> function to separate the
 trend, seasonal, and remainder components.</strong></p>
 <p><strong>2. Subtract the trend from the original data to create a
 detrended dataset.</strong></p>
 <p><strong>3. Fit an ARIMA model to the detrended dataset and forecast
 for the next 5 years.</strong></p>
-<p><strong>4. Compare the forecasts and residual diagnostics of the
-detrended model with the original <code>ARIMA(5,0,0)</code>
-model.</strong></p>
-<div id="hint-every-function-you-will-use-are-already-introduced-in-the-previous-sections-this-should-not-take-longer-than-20-mins" class="section level4">
-<h4>Hint: Every function you will use are already introduced in the
-previous sections! This should not take longer than 20 mins!</h4>
+</div>
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details>
 <summary>
@@ -1142,24 +1235,18 @@ detrended_forecast &lt;- forecast(detrended_model, h = 60)
 # Plot the forecast
 plot(detrended_forecast, main = &quot;Forecast After Detrending&quot;)
 
-# Analyze residuals
-checkresiduals(detrended_model)
-
-# Compare accuracy metrics
-detrended_accuracy &lt;- accuracy(detrended_model)
-original_accuracy &lt;- accuracy(best_model)
-
-# Print comparison
-cat(&quot;Detrended Model Accuracy:\n&quot;)
-print(detrended_accuracy)
-
-cat(&quot;Original Model Accuracy:\n&quot;)
-print(original_accuracy)
-</code></pre>
+# Analyse residuals
+checkresiduals(detrended_model)</code></pre>
 </details>
 </div>
-<p>What can you tell from the plots or the accuracy metrics? How the two
-models compares by looking at the metrics?</p>
+</div>
+<div id="challenge-2-how-the-two-models-compares-by-looking-at-the-metrics" class="section level3">
+<h3>Challenge 2: How the two models compares by looking at the
+metrics?</h3>
+<p>Run the following code, and tell yourself how the two models
+compares?</p>
+<pre class="r"><code>accuracy(best_model)
+accuracy(detrended_model)</code></pre>
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details>
 <summary>
@@ -1167,7 +1254,7 @@ Click here for the solution!
 </summary>
 <p>Your output should displays the accuracy metrics for the detrended
 model (<code>detrended_accuracy</code>) and the original ARIMA model
-(<code>original_accuracy</code>). Here’s what the metrics indicate and
+(<code>original_accuracy</code>). Here are what the metrics indicate and
 how the two models compare:</p>
 <div id="mean-error-me" class="section level4">
 <h4><strong>Mean Error (ME):</strong></h4>
@@ -1196,7 +1283,7 @@ errors.</li>
 <li><strong>Original Model</strong>: 0.9750409</li>
 <li><strong>Insight</strong>: The detrended model also has a lower MAE,
 indicating it performs better in capturing the average error magnitude
-without penalizing large errors as heavily as RMSE does.</li>
+without penalising large errors as heavily as RMSE does.</li>
 </ul>
 </div>
 <div id="mean-percentage-error-mpe" class="section level4">
@@ -1242,7 +1329,7 @@ better ACF1 value closer to 0.</li>
 </details>
 </div>
 </div>
-Can you then tell which model is better?
+<strong>Can you then tell which model is better?</strong>
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details>
 <summary>
@@ -1263,6 +1350,60 @@ meaning either is valid for forecasting.</strong></li>
 
 </div>
 </div>
+<div id="summary-and-reflection" class="section level2">
+<h2>Summary and Reflection</h2>
+<p>In this tutorial, you’ve taken a deep dive into time series analysis
+and forecasting using real-world temperature data from Edinburgh. Here’s
+a recap of the key skills and techniques you’ve learned:</p>
+<ul>
+<li><strong>Data Preparation and Exploration:</strong>
+<ul>
+<li>cleaning, organizing and visualizing time series data to uncover
+underlying trends and seasonality.</li>
+</ul></li>
+<li><strong>Analyzing Time Series:</strong>
+<ul>
+<li>Decomposing time series into trend, seasonality, and residuals to
+better understand their components.</li>
+<li>Evaluating stationarity and autocorrelation using statistical tests
+and diagnostic plots.</li>
+</ul></li>
+<li><strong>Modeling and Forecasting:</strong>
+<ul>
+<li>Building ARIMA models to forecast future temperature trends.</li>
+<li>Understanding the importance of model evaluation metrics like AIC,
+BIC, RMSE, and residual diagnostics.</li>
+</ul></li>
+<li><strong>Problem-Solving:</strong>
+<ul>
+<li>Applying these techniques to challenge problems, enabling you to
+tackle diverse datasets and forecasting scenarios.</li>
+</ul></li>
+</ul>
+</div>
+<div id="next-steps-from-this-tutorial" class="section level2">
+<h2>Next Steps from this tutorial</h2>
+<ul>
+<li><p><strong>Explore Advanced Models:</strong> Now that you’re
+familiar with ARIMA, try exploring other advanced forecasting models
+such as:</p>
+<ul>
+<li><strong>Prophet:</strong> A flexible and robust model designed for
+handling seasonal data with holiday effects. Check out the
+<code>prophet</code> package in R.</li>
+<li><strong>TBATS:</strong> Useful for handling complex seasonal
+patterns and multiple seasonalities.</li>
+</ul></li>
+<li><p><strong>Apply to Real-World Problems:</strong> Use time series
+analysis to explore datasets from your field of interest, such as
+rainfall patterns, biodiversity monitoring, or energy consumption
+data.</p></li>
+<li><p><strong>Learn Forecasting Beyond ARIMA:</strong> Dive into
+machine learning techniques like Long Short-Term Memory (LSTM) networks
+for time series forecasting using Python or R.</p></li>
+</ul>
+<p>I hope you have enjoyed working on this tutorial and wish it can be
+some of help for your future study or career!</p>
 </div>
 </div>
 

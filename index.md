@@ -1,5 +1,5 @@
 ---
-title: 'Tutorial: Introduction to time Series Analysis for Environmental Data'
+title: 'Introduction to time Series Analysis using Temperature Data'
 author: "Runlin Chen"
 date: "2024-11-21"
 output: html_document
@@ -7,53 +7,64 @@ output: html_document
 
 # Tutorial aims 
 
-1. Understand the fundamentals of time series analysis and its applications in environmental data.
-2. Learn how to preprocess, visualize, and decompose time series dataset for meaningful insights.
-3. Gain hands-on experience with forecasting techniques to predict trends in environmental data.
-4. Develop skills in using R and relevant packages for analyzing time series data effectively.
+The aim of this tutorial is to provide a comprehensive and approachable guide to time series analysis and forecasting using temperature data in Edinburgh. This tutorial is designed for advanced undergraduate or early graduate students in Environmental or Ecological Sciences who are looking to enhance their data science skills. By the end of this tutorial, learners will:
+
+- Understand the fundamental concepts of time series analysis, including decomposition, stationarity, and autocorrelation.
+- Gain hands-on experience in using R to preprocess, analyse, and forecast time series data.
+- Learn how to assess and improve model performance and interpret forecasting results effectively.
+- Apply these techniques to real-world problems to understand climate trends and predict environmental changes.
+
+---
 
 # Tutorial steps
-#### 1. Introduction.
+#### 1. Introduction
 
 ### Part I: Data Preparation and Exploration
-#### 2. Data wrangling:
-a) Load the relevant libraries and the dataset.
-b) Clean and organize the dataset
+#### 2. Data Preparation
+a) Load the dataset.
+b) Clean and organise the dataset.
 
+### Part II: Analyzing Time Series and Assumptions Check
+#### 3. Visualization of data
 
-### Part II: Analyzing Time Series
-#### 4. Decomposing Time Series:
-a) Splitting time series into trend, seasonal, and residual components with _decompose_.
-b) Interpreting decomposed components in environmental contexts.
+#### 4. Decomposing Time Series
 
-5. Detecting Anomalies:
-a) Identifying outliers and spikes using visualization techniques.
-b) Using statistical tests to confirm anomalies.
+#### 5. Check important assumptions
+a) Stationarity Check
+b) Normality of Residual Check
 
 ### Part III: Forecasting
-6. Select an appropriate forecasting model.
 
+#### 6. Select an appropriate forecasting model
 
-7. Generate forecasts for future time points.
+#### 7. Generate forecasts
+a) Forecasting the temperature next year (the next 12 months)
+b) (Optional) Compare the forecasted temperature with real-world temperature
 
-8. Evaluate the model's performance.
+#### 8. Evaluate the model's performance
 
+#### 9. (Optional) Forecasting the temperature for the next 5 years (the next 60 months)
 
-### (Optional) Part IV: Challenge: Evaluating the Impact of Temperature Trends
-10: Analyze whether there is a long-term trend in the temperature data and assess its impact on the forecasting model.
+### (Optional) Part IV: Challenges
+#### 10: Analyse whether there is a long-term trend in the temperature data and assess its impact on the forecasting model
+
+---
 
 ## 1. Introduction
-Time series data are sequential data points collected over time. In environmental science, these could be measurements like temperature, rainfall, species population counts, or carbon dioxide levels. Time series analysis allows us to detect trends, seasonality, and anomalies, predict future values, and understand temporal dynamics of environmental processes. In this tutorial, you’ll learn the basics of time series analysis, including data preprocessing, visualization, decomposition, and basic forecasting techniques.
 
-In part 1, we will be working with a dataset from *NASA* that captures the temperature of earth and try to do some data wrangling with it to make it easier for later analysis. In part 2, we will look into some basic and fundamental techniques that can be used to deal with time series data. In part 3, things are going to get interesting because we are going to build a forecasting Models that is able to predict the temperature in the future. 
+Time series data is ubiquitous in environmental and ecological sciences, from monitoring weather patterns to analyzing biodiversity trends. This tutorial focuses on the monthly average temperatures in Edinburgh from 2000 to 2022, offering a real-world application of time series analysis. With increasing awareness of climate change and its impact on ecosystems, analysing temperature trends can provide critical insights for researchers, policymakers, and urban planners.
+
+This tutorial will take you step-by-step through the process of time series analysis, starting with data preprocessing and exploration, followed by decomposition and statistical analysis, and concluding with forecasting future trends using ARIMA models. Along the way, we will discuss key assumptions, model diagnostics, and evaluation metrics to ensure robust analysis.
+
+Whether you are new to time series analysis or seeking to deepen your expertise, this tutorial provides a practical foundation in handling real-world environmental data using R. Let’s get started on exploring the story hidden within the temperature data of Edinburgh!
 
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
-> ***_NOTE:_*** Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as _%>%_ and _summarise()_. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
+> ***_NOTE:_*** Note that this tutorial will assume that you already have previous experience with R and familiar with basic operations of R such as `%>%` and `summarise()`. If not, Coding Club has got you covered: check out the [Intro to R tutorial](https://ourcodingclub.github.io/tutorials/intro-to-r/)!
 </div>
 
 # _Part I: Data Preparation and Exploration_
 ## 2. Data Wrangling
-### a) Load the dataset
+### (a) Load the dataset
 In this tutorial, we will use a dataset obtained from the **NASA POWER API**, a tool that provides climate data from NASA's Prediction of Worldwide Energy Resource (POWER) project. Specifically, we will use monthly temperature data (measured at 2 meters above the ground) of Edinburgh (by using Edinburgh's location coordinates: Longitude: 3.1883°W & Latitude: 55.9533°N) for the years 2000 to 2022. 
 We first download the relevant packages using the following code:
 ```r
@@ -66,7 +77,7 @@ library(nasapower)
 library(lubridate)
 ```
 
-Now let's load the dataset and name it `temp_data`. Note that we want the location to be Edinburgh so we need to enter Edinburgh's coordinate of location. 
+Now let's load the dataset and name it `temp_data`. Note that we want the location to be Edinburgh so, we need to enter Edinburgh's coordinate of location. 
 
 ```r
 temp_data <- get_power(
@@ -78,7 +89,7 @@ temp_data <- get_power(
 )
 ```
 
-### b) Clean and organize the dataset
+### (b) Clean and organise the dataset
 Now we have the dataset, but is it in a ideal form for doing time series analysis? An ideal dataset for time series analysis has specific characteristics that make it well-suited for extracting meaningful patterns and developing accurate models:
 
 **- Consistent Time Intervals:** Regular intervals ensure that the dataset captures temporal patterns like trends, seasonality, or cyclic behavior accurately. Irregular intervals make it difficult to apply standard time series models. 
@@ -89,12 +100,27 @@ Now we have the dataset, but is it in a ideal form for doing time series analysi
 
 **- Clear labels for time periods:** Properly labeled time points make it easier to interpret results and ensure that models process the data correctly. 
 
-These are some basic characteristics of a dataset that is ideal for doing timer series analysis. Without these characteristics, the quality and reliability of the analysis may suffer. More constraints may apply to the dataset depends on the aims of analysis.
+These are some basic characteristics of a dataset that are ideal for doing timer series analysis. Without these characteristics, the quality and reliability of the analysis may suffer. 
 
-Now let's check what our dataset looks like by running `head(temp_data)`. We can see that the dataset is in a wide format, with months as separate columns. This structure is not ideal for time series analysis, where data should be in long format with a single date column. Also, we do not need columns such as `LON`, `LAT`, and `PARAMETER` are repeated and not provide valuable information. Moreover, the column names for months (JAN, FEB, etc.) use abbreviations, which need to be converted into numbers or used to generate a proper date. These can be done using the following code: 
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+Note that more requirements may apply to the dataset, depending on the aims of analysis.
+</div>
+
+Now let's check what our dataset looks like by running `head(temp_data)`. We can see that the dataset is in a wide format, with months as separate columns. This structure is not ideal for time series analysis, where data should be in long format with a single date column. Also, we do not need columns such as `LON`, `LAT`, and `PARAMETER` are repeated and not provide valuable information. Moreover, the column names for months (JAN, FEB, etc.) use abbreviations, which need to be converted into numbers or used to generate a proper date. 
+
+Based on these information and the characteristics, clean and make the dataset as what we wanted in the following code chunk! Consider this as a warm-up!
+```r 
+# Write your code here (or somewhere else)!
+
+
+
+```
+If you are ready, check the solution by clicking the button below!
+
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
 
 ```r
-# Step 1: Reshape from wide to long format
 # Clean the dataset
 temp_data <- temp_data %>%
   # Reshape from wide to long format
@@ -111,8 +137,11 @@ temp_data <- temp_data %>%
   mutate(YEAR_MONTH = ym(YEAR_MONTH)) %>% # Convert "YEAR-MONTH" to date
   # Select only the relevant columns for time series analysis
   select(YEAR_MONTH, TEMPERATURE)
-  
 ```
+</details>
+</div>
+
+
 Run the `head(temp_data)` again and see what it looks like now. Now it is in long format and has only two columns: `YEAR_MONTH` and `TEMPERATURE`.  This is a fairly simple dataset but ideal for time series analysis! Note that we haven't check if there is missing values in the dataset, we can do this by running the following code which count the number of missing values in the entire dataset:
 
 ```r
@@ -123,7 +152,7 @@ sum(is.na(temp_data))
 It's 0! This means there is no missing value in our dataset. We are good to go!
 
 # _Part II: Analyzing Time Series_
-### 3. Visualization of data
+## 3. Visualization of data
 We can start by displaying the temperature trends over time and see what the plot looks like. We can simply use the `ggplot()` to do this for us:
 ```r
 ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
@@ -140,8 +169,8 @@ ggplot(temp_data, aes(x = YEAR_MONTH, y = TEMPERATURE)) +
 
 We can clearly see that the temperature exhibits a clear seasonal pattern, with regular fluctuations that likely correspond to yearly changes (e.g., summer and winter cycles). The recurring peaks represent warmer months, while the troughs correspond to cooler months, highlighting predictable seasonal variability. Also, there does not appear to be a significant long-term upward or downward trend, suggesting relative stability in Edinburgh's average temperature from 2000 to the end of 2020. 
 
-### 4. Decomposing Time Series:
-The previous plot provides an overview of the temperature trends over time, showing clear seasonal fluctuations and variations. However, to better understand the underlying components—such as the overall trend, recurring seasonal patterns and random fluctuations, we can decompose the time series. Decomposition helps us isolate these components, enabling a more detailed analysis of the data. Using the `forecast` library, we can use the `objects` and `stl()` function, we can decompose our dataset:
+## 4. Decomposing Time Series:
+The previous plot provides an overview of the temperature trends over time, showing clear seasonal fluctuations and variations. However, to better understand the underlying components—such as the overall trend, recurring seasonal patterns and random fluctuations, we can decompose the time series. Decomposition helps us isolate these components, enabling a more detailed analysis of the data. Using the `stl()` function from the `forecast` library, we can decompose our dataset:
 ```r
 ts_data <- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
 
@@ -149,13 +178,19 @@ ts_data <- ts(temp_data$TEMPERATURE, start = c(2000, 1), frequency = 12)
 decomposed_stl <- stl(ts_data, s.window = "periodic")
 plot(decomposed_stl, main = "STL Decomposition of the Data")
 ```
-The `ts` function converts our temperature data into a time series object and the `stl` function performs seasonal and trend decomposition (note that here we use `s.window = "periodic"` to assume a fixed seasonal pattern in the dataset). Run this chunk of code and we will get the plot below:
+<div style="background-color: #d9edf7;; padding: 10px; border-radius: 5px;">
+The `ts` function converts our temperature data into a time series object and the `stl` function performs seasonal and trend decomposition (note that here we use `s.window = "periodic"` to assume a fixed seasonal pattern in the dataset). 
+</details>
+</div>
+
+Run the code and we will get the plot below:
 
 <center><img src="plots/STL_Decomposition.png" alt="STL Decomposition Plo" width="589"/></center>
 
 
 There dataset is decomposed into the following four panels:
-**- Data (Observed Time Series):** The top panel represents the original temperature data, which shows both seasonal patterns and an underlying trend. This is just what we have in Figure 1. 
+
+**- Data (Observed Time Series):** The top panel represents the original temperature data, which shows both seasonal patterns and an underlying trend. This is just what we have in the plot `Temperature Trends Over Time`. 
 
 **- Seasonal Component:** The second panel highlights the seasonal component, which is consistent across the years. The periodic fluctuations indicate clear seasonality in the dataset, with similar highs and lows repeating each year. This is typical for most temperature datasets, where warmer and cooler months recur annually.
 
@@ -163,15 +198,14 @@ There dataset is decomposed into the following four panels:
 
 **- Remainder (Random Component):** The fourth panel shows the remainder (random) component, which captures noise or unexplained variations in the data. There are spikes and dips, suggesting anomalies or unusual events that deviate from the expected trend and seasonality of the dataset. These could be due to irregular climatic events such as heatwaves, cold snaps, or measurement errors.
 
-In general, the trend component offers insights into long-term climatic changes, useful for climate modeling and environmental studies. Further more, the decomposition shows strong seasonality, which can be leveraged for accurate seasonal forecasting later.
+In general, the decomposition shows strong seasonality, which can be leveraged for accurate seasonal forecasting later.
 
-
-### 5. Check important assumptions
-There are some important assumptions to check before going to forecasting (eg, Stationarity, autocorrelation and Independence of Residuals...). In this tutorial, our main focus will be on the forecasting so we would not spend much time checking through all the assumptions. Here, we will only check two of the main assumptions: **Stationarity** and **Normality of Residuals** to show you how things work!
+## 5. Check important assumptions
+There are some important assumptions to check before going to forecasting (eg, Stationarity, autocorrelation and Independence of Residuals...). In this tutorial, our main focus will be on forecasting so we would not spend much time checking through all the assumptions. Here, we will only check two of the main assumptions: **Stationarity** and **Normality of Residuals** to show you how things work!
 
 > ***_NOTE:_***  If you would like to know what each assumption is and how to check them using R, please refer to this amazing [Youtube video](https://www.youtube.com/watch?v=eTZ4VUZHzxw&t=204s)!
 
-#### (a) Stationarity Check
+### (a) Stationarity Check
 Before we move to part III: Data forecasting, it is important to perform stationary check to our dataset. Stationarity is a fundamental assumption for many time series forecasting methods. A stationary series will show constant mean and variance over time, with no visible trend or seasonality. In our case, we will be using looking at rolling mean and rolling standard deviations. These metrics are computed over a moving window (or "rolling window") of data points. The window slides through the dataset, recalculating the mean or standard deviation for each new position. Here we set the k = 12 for the rolling windows because 12 months is a year. 
 A way to check this is to use the rolling mean and standard deviation from the `zoo` library. 
 ```r
@@ -180,7 +214,7 @@ roll_mean <- zoo::rollmean(temp_data$TEMPERATURE, k = 12, fill = NA)
 roll_sd <- zoo::rollapply(temp_data$TEMPERATURE, width = 12, FUN = sd, fill = NA)
 ```
 
-Then we can visualize it to see if they change over time by running the following code:
+Then we can visualise it to see if they change over time by running the following code:
 ```r
 plot(temp_data$TEMPERATURE, type = "l", col = "blue", ylab = "Temperature", xlab = "Number of Month from 2000")
 lines(roll_mean, col = "red", lty = 2)  # Rolling mean
@@ -195,11 +229,15 @@ Here is the plot, what can we tell from it?
 We can see clearly from the plot that the rolling mean indicates a generally consistent trend over time, with some slight variations in its level. The rolling standard deviation is also relatively stable but appears to fluctuate slightly, particularly around certain periods (e.g., after 100 on the x-axis). However, the rolling mean and the rolling standard deviations are all generally constant. This suggests our dataset is mostly stable but may still have non-stationary components, likely because of the seasonal patterns of the data. 
 
 <div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
-Try `print(roll_mean)` and `print(roll_sd)`, why is there 5 `NA` values at the beginning and the end of them? Hint: think about why we need the `fill = NA` argument when we were computing the rolling mean and rolling standard deviaton.
-<div>
+Try `print(roll_mean)` and `print(roll_sd)`, why are there 5 `NA` values at the beginning and the end of them? Hint: think about why we need the `fill = NA` argument when we were computing the rolling mean and rolling standard deviaton.
+</div>
 
 
+<div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
+<details> <summary>Click here for the solution!</summary>
 The Answer is that: The `zoo::rollmean` function in R calculates the moving average with a specified window size k. When you specify `k = 12`, it calculates the mean over a rolling window of 12 data points. A window size of 12 means that the function requires 12 data points to calculate the first value of the moving average. For the first and last 5 points in your dataset, there aren't enough data points to form a complete window of size 12, and that is why we need to `fill = NA` argument! The `fill = NA` argument ensures that where there aren't enough data points to calculate the moving average, `NA` is inserted instead of a numeric value.
+</details>
+</div>
 
 ### Another (rather formal) way to check stationarity
 If you are a math person and feel like looking at the mean and variance visually is not convincing enough, there are several formal ways to reduce your concerns! One of them is the `Augmented Dickey-Fuller (ADF) Test` from the  `tseries` library which checks whether a time series is stationary or not. We can perform the test using the following code
@@ -209,9 +247,9 @@ adf.test(temp_data$TEMPERATURE, alternative = "stationary")
 
 ```
 
-The test statistic is `-11.987`. This value is compared with critical values from the Dickey-Fuller table. A very negative test statistic (as in this case) strongly indicates that the null hypothesis can be rejected. The null hypothesis assumes that this time series is non-stationary (it has a unit root). Since the p-value is very small (smaller than common significance levels 0.5), we can reject the null hypothesis that is time series it not stable.
+The test statistic is `-11.987`. This value is compared with critical values from the Dickey-Fuller table. A very negative test statistic (as in this case) strongly indicates that the null hypothesis can be rejected. The null hypothesis assumes that this time series is non-stationary (it has a unit root). Since the p-value is very small (smaller than common significance levels 0.5), we can reject the null hypothesis that the time series it not stable.
 
-#### (b) Normality of Residual Check
+### (b) Normality of Residual Check
 Another important assumption to check is the Normality of Residual. Two easy ways to check this is through a histogram of residuals and a Q-Q plot, which can be done easily by the following code:
 ```r
 # Check Normality (Histogram)
@@ -231,7 +269,7 @@ Both plots look good. The histogram on the left shows that the residuals are app
 
 # _Part III: Forecasting_
 
-Now that we’ve prepared and analyzed our time series data, it’s time to build a forecasting model and generate future predictions! In this section, we will:
+Now that we’ve prepared and analysed our time series data, it’s time to build a forecasting model and generate future predictions! In this section, we will:
 
 **- Select an appropriate forecasting model.** 
 
@@ -239,10 +277,10 @@ Now that we’ve prepared and analyzed our time series data, it’s time to buil
 
 **- Evaluate the model's performance.** 
 
-**- Visualize and interpret the forecast results.** 
+**- Visualise and interpret the forecast results.** 
 
 
-### 6. Select an appropriate forecasting model.
+## 6. Select an appropriate forecasting model.
 The first step in forecasting is selecting the right model. For this tutorial, we’ll use the ARIMA (Auto-Regressive Integrated Moving Average) model, as it is versatile and works well for time series data with trends and seasonality. Good news for us, R provides the `auto.arima()` function from the `forecast` library, which automatically selects the best ARIMA model for the data by optimizing the parameters:
 
 ```r
@@ -254,7 +292,19 @@ Now run `summary(best_ARIMA_model)`. This will display the selected model's deta
 # Display the model summary
 summary(best_model)
 ```
-If you have never used ARIMA model before, this table may looks confusing to you. Let's break it down!
+We will get a title `ARIMA(5,0,0)` and a summary table containing the following information:
+
+| Term  | Coefficient | SE     |
+|-------|-------------|--------|
+| ar1   | 0.7249      | 0.0583 |
+| ar2   | -0.0231     | 0.0714 |
+| ar3   | 0.0160      | 0.0713 |
+| ar4   | -0.2594     | 0.0717 |
+| ar5   | -0.2537     | 0.0586 |
+| mean  | 8.4191      | 0.0938 |
+
+
+If you have never used ARIMA model before, this table may looks confusing to you. Let's break it down:
 
 #### (a). `ARIMA(5,0,0)`:
 
@@ -266,7 +316,7 @@ If you have never used ARIMA model before, this table may looks confusing to you
 #### (b). Coefficients:
 
 - The table lists the coefficients for the autoregressive terms (**ar1** to **ar5**) and the overall **mean**:
-  - **`ar1 = 0.7249`**: Indicates a strong positive relationship between the current value and the first lag.
+  - **`ar1 = 0.7249`**: The coefficient for the first lag. It represents the influence of the immediate previous value of the time series on the current value. Here, ar1 = 0.7249, meaning there is a strong positive correlation between the current value and the value from one step ago.
   - **`ar2 = -0.0231`**: Shows a very weak negative relationship between the current value and the second lag.
   - **`ar3, ar4, ar5`**: These terms show progressively weaker relationships, with some negative contributions.
   - **`mean = 8.4191`**: The average value of the series, which is included because the series has a non-zero mean.
@@ -281,10 +331,14 @@ If you have never used ARIMA model before, this table may looks confusing to you
 
 - **`AIC` (Akaike Information Criterion) = 916.32**: AIC measures the quality of a statistical model by balancing its fit to the data and its complexity. Lower AIC values normally indicate a better model because it suggests a good balance between model accuracy and simplicity.
 
-- **`BIC` (Bayesian Information Criterion) = 941.66**: Similar to AIC, BIC also balances model fit and complexity but penalizes complexity more heavily than AIC.
-  - These are measures of model fit, where lower values indicate a better model. We can compare these values with other models to select the best one if necessary. 
+- **`BIC` (Bayesian Information Criterion) = 941.66**: Similar to AIC, BIC also balances model fit and complexity but penalises complexity more heavily than AIC.
 
-### 7. Generate forecasts for future time points.
+
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+The purpose of this tutorial is more about how to use `ARIMA` model in time series analysis, so we would not go into details of how to calculate each value or how the model is created. If you want to dig into how the `ARIMA` model, please refer to this [website](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average#Examples).
+</div>
+
+## 7. Generate forecasts
 ### (a). Forecasting the temperature next year (the next 12 months)
 Now that we have our `ARIMA` model and we have ideas of what each value represents, we can forecast temperature for the next 12 months! We can do this using the following code:
 ```r
@@ -316,7 +370,7 @@ We can see that the plot shows clear seasonal patterns in the temperature data. 
 
 The smooth continuation of seasonal cycles suggests the ARIMA model captures the underlying patterns well.
 
-### (b)  (Optional) Compare the forecasted temperature with real-world temperature
+### (b) (Optional) Compare the forecasted temperature with real-world temperature
 For those of you who are really curious about how accurate this model is, we can try to fit the data of the true temperature in 2023 in Edinburgh to this model. We can extract this data using similar to what we did at the first place!
 Firstly, let's get the dataset from **NASAPOWER**
 ```r
@@ -351,7 +405,7 @@ Here is what the plot looks like now:
 
 We can see that our prediction of the monthly temperature in 2023 fits the real-life temperatures very well! The real-world data (red line) sits in the the confidence interval (shaded area) and basically overlap with our predictions.
 
-### 8. Evaluate the model's performance.
+## 8. Evaluate the model's performance.
 Now let's go back to our first prediction model where we predict the temperature for only the next year. Remember that we generated our model using the following code:
 ```r
 best_model <- auto.arima(temp_data$TEMPERATURE, seasonal = TRUE)
@@ -418,8 +472,8 @@ Here is whet each value means:
 
 
 
-### 9. (Optional) Forecasting the temperature next 5 years (the next 60 months)
-You may also wonder that, if we can predict the temperature in the next year, can we predict the temperature for the next 5 years? The answer is YES! You can predict the temperature as furthur way as you want, however, you should bear in mind that the forecast is most accurate for the near future, with uncertainty increasing further out. You can predict the temperature of Edinburgh in the next 5 years using the following code:
+## 9. (Optional) Forecasting the temperature next 5 years (the next 60 months)
+You may also wonder that, if we can predict the temperature in the next year, can we predict the temperature for the next 5 years? The answer is YES! You can predict the temperature as further away as you want, however, you should bear in mind that the forecast is most accurate for the near future, with uncertainty increasing further out. You can predict the temperature of Edinburgh in the next 5 years using the following code:
 ```r
 forecasted_5_years <- forecast(best_model, h = 60)
 
@@ -438,32 +492,31 @@ And you should get a output like this:
 
 We can see that the forecasted values continue to exhibit clear seasonal patterns, similar to the historical data. This indicates the model has effectively captured the recurring temperature cycles. Also, there is no noticeable long-term upward or downward trend in the temperature over the forecast horizon. This suggests that the average annual temperatures are expected to remain relatively stable over the next 5 years. 
 
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
 > ***_NOTE:_***  The prediction intervals (shaded regions) widen as the forecast extends further into the future, reflecting increased uncertainty in the model's predictions. This is a common characteristic of time series forecasts, as predicting further into the future inherently involves more variability! Also, additional factors like climate change or unexpected events could alter these patterns and should be considered when interpreting the forecast.
+</div>
 
 # _Part IV: (Optional) Challenge Problem_
 
-## Chanllenge: Evaluating the Impact of Temperature Trends
-Well done! You’ve now learned how to analyze and forecast time series data using ARIMA models and have explored model diagnostics and accuracy evaluation. In this challenge, you will apply what you’ve learned to evaluate the impact of Temperature Trends. 
+## 10. Chanllenge: Evaluating the Impact of Temperature Trends
+Well done! You’ve now learned how to analyse and forecast time series data using ARIMA models and have explored model diagnostics and accuracy evaluation. In this challenge, you will apply what you’ve learned to evaluate the impact of Temperature Trends. 
 
-### Tasks: 
-Analyze whether there is a long-term trend in the temperature data and assess its impact on the forecasting model. You will:
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+Hint: Every function you will use are already introduced in the previous sections! This should not take longer than 20 mins!
+</div>
 
-**1. Decompose the time series to identify trends.**
+### Challenge 1: Decompose the time series and refit the ARIMA model on the detrended data
 
-**2. Use the decomposed trend component to adjust the original data (detrending).**
+Build a new model using by substracting the trend from the original data, and name it `decomposed_data`.
 
-**3. Refit the ARIMA model on the detrended data and compare it with the original model.**
-
-### Hints/Steps:
+<div style="background-color: #d9edf7; padding: 10px; border-radius: 5px;">
+#### Hints/Steps:
 **1. Use the `decompose()` function to separate the trend, seasonal, and remainder components.**
 
 **2. Subtract the trend from the original data to create a detrended dataset.**
 
 **3. Fit an ARIMA model to the detrended dataset and forecast for the next 5 years.**
-
-**4. Compare the forecasts and residual diagnostics of the detrended model with the original `ARIMA(5,0,0)` model.**
-
-#### Hint: Every function you will use are already introduced in the previous sections! This should not take longer than 20 mins!
+</div>
 
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details> <summary>Click here for the solution!</summary>
@@ -490,34 +543,25 @@ detrended_forecast <- forecast(detrended_model, h = 60)
 # Plot the forecast
 plot(detrended_forecast, main = "Forecast After Detrending")
 
-# Analyze residuals
+# Analyse residuals
 checkresiduals(detrended_model)
-
-# Compare accuracy metrics
-detrended_accuracy <- accuracy(detrended_model)
-original_accuracy <- accuracy(best_model)
-
-# Print comparison
-cat("Detrended Model Accuracy:\n")
-print(detrended_accuracy)
-
-cat("Original Model Accuracy:\n")
-print(original_accuracy)
-
 ```
 </details>
 </div>
 
 
+### Challenge 2: How the two models compares by looking at the metrics? 
 
-What can you tell from the plots or the accuracy metrics?  How the two models compares by looking at the metrics? 
-
-
+Run the following code, and tell yourself how the two models compares?
+```r
+accuracy(best_model)
+accuracy(detrended_model)
+```
 
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details> <summary>Click here for the solution!</summary>
 
-Your output should displays the accuracy metrics for the detrended model (`detrended_accuracy`) and the original ARIMA model (`original_accuracy`). Here's what the metrics indicate and how the two models compare:
+Your output should displays the accuracy metrics for the detrended model (`detrended_accuracy`) and the original ARIMA model (`original_accuracy`). Here are what the metrics indicate and how the two models compare:
 
 #### **Mean Error (ME):**
 - **Detrended Model**: 0.003972955
@@ -532,7 +576,7 @@ Your output should displays the accuracy metrics for the detrended model (`detre
 #### **Mean Absolute Error (MAE):**
 - **Detrended Model**: 0.8860468
 - **Original Model**: 0.9750409
-- **Insight**: The detrended model also has a lower MAE, indicating it performs better in capturing the average error magnitude without penalizing large errors as heavily as RMSE does.
+- **Insight**: The detrended model also has a lower MAE, indicating it performs better in capturing the average error magnitude without penalising large errors as heavily as RMSE does.
 
 #### **Mean Percentage Error (MPE):**
 - **Detrended Model**: 10.2126
@@ -557,9 +601,7 @@ Your output should displays the accuracy metrics for the detrended model (`detre
 </details>
 </div>
 
-
-
-Can you then tell which model is better? 
+**Can you then tell which model is better?** 
 <div style="background-color: #FFF9C4; padding: 10px; border-radius: 5px;">
 <details> <summary>Click here for the solution!</summary>
 - **The detrended model has lower RMSE and MAE, suggesting it better handles the magnitude of prediction errors.**
@@ -567,3 +609,33 @@ Can you then tell which model is better?
 - **Both models exhibit minimal residual autocorrelation, meaning either is valid for forecasting.**
 </details>
 <div>
+
+
+## Summary and Reflection
+
+In this tutorial, you’ve taken a deep dive into time series analysis and forecasting using real-world temperature data from Edinburgh. Here's a recap of the key skills and techniques you've learned:
+
+- **Data Preparation and Exploration:**
+  - cleaning, organizing and visualizing time series data to uncover underlying trends and seasonality.
+  
+- **Analyzing Time Series:**
+  - Decomposing time series into trend, seasonality, and residuals to better understand their components.
+  - Evaluating stationarity and autocorrelation using statistical tests and diagnostic plots.
+
+- **Modeling and Forecasting:**
+  - Building ARIMA models to forecast future temperature trends.
+  - Understanding the importance of model evaluation metrics like AIC, BIC, RMSE, and residual diagnostics.
+
+- **Problem-Solving:**
+  - Applying these techniques to challenge problems, enabling you to tackle diverse datasets and forecasting scenarios.
+
+## Next Steps from this tutorial
+- **Explore Advanced Models:** Now that you’re familiar with ARIMA, try exploring other advanced forecasting models such as:
+  - **Prophet:** A flexible and robust model designed for handling seasonal data with holiday effects. Check out the `prophet` package in R.
+  - **TBATS:** Useful for handling complex seasonal patterns and multiple seasonalities.
+
+- **Apply to Real-World Problems:** Use time series analysis to explore datasets from your field of interest, such as rainfall patterns, biodiversity monitoring, or energy consumption data.
+
+- **Learn Forecasting Beyond ARIMA:** Dive into machine learning techniques like Long Short-Term Memory (LSTM) networks for time series forecasting.
+
+I hope you have enjoyed working on this tutorial and wish it can be some of help for your future study or career! 
