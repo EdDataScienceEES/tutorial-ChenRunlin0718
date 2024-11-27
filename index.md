@@ -143,11 +143,9 @@ temp_data <- temp_data %>%
 
 
 Run the `head(temp_data)` again and see what it looks like now. Now it is in long format and has only two columns: `YEAR_MONTH` and `TEMPERATURE`.  This is a fairly simple dataset but ideal for time series analysis! Note that we haven't check if there is missing values in the dataset, we can do this by running the following code which count the number of missing values in the entire dataset:
-
 ```r
 sum(is.na(temp_data))
 ```
-
 
 It's 0! This means there is no missing value in our dataset. We are good to go!
 
