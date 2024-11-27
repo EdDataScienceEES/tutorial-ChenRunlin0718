@@ -1,3 +1,4 @@
+
 library(ggplot2)
 library(forecast)
 library(tidyr)
@@ -24,7 +25,7 @@ temp_data <- get_power(
 temp_data <- temp_data %>%
   # Reshape from wide to long format
   pivot_longer(
-    cols = JAN:DEC, # Ensure column names match exactly
+    cols = JAN:DEC, 
     names_to = "MONTH",
     values_to = "TEMPERATURE"
   ) %>%
